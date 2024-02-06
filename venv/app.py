@@ -19,8 +19,13 @@ def registration_form():
 
 # Route for lobby page
 @app.route('/lobby_page')
-def login_page():
+def lobby_page():
     return render_template('lobby.html')
+
+# Route for lobby page
+@app.route('/proctor_register')
+def proctor_register():
+    return render_template('proctor_register.html')
 
 # Route for form submission (registration)
 @app.route('/register', methods=['POST'])
