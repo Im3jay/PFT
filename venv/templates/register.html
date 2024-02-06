@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <form action="/register" method="post">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" placeholder="Username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" placeholder="Password" required>
+
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+
+            <label for="rank">Rank:</label>
+            <input type="text" name="rank" id="rank" placeholder="Rank" required>
+
+            <label for="first_name">First Name:</label>
+            <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
+
+            <label for="middle_name">Middle Name:</label>
+            <input type="text" name="middle_name" id="middle_name" placeholder="Middle Name">
+
+            <label for="surname">Surname:</label>
+            <input type="text" name="surname" id="surname" placeholder="Surname" required>
+
+            <label for="afpsn">AFPSN:</label>
+            <input type="text" name="afpsn" id="afpsn" placeholder="AFPSN" minlength="6" maxlength="6" required>
+
+            <label for="afpos_mos">AFPOS MOS:</label>
+            <input type="text" name="afpos_mos" id="afpos_mos" placeholder="AFPOS MOS" required>
+
+            <label for="gender">Gender :</label>
+            <input type="text" name="gender" id="gender" placeholder="Gender" minlength="1" maxlength="1" required>
+
+            <label for="age">Age:</label>
+            <input type="text" name="age" id="age" placeholder="Age" minlength="2" maxlength="2" required>
+
+            <button type="submit" href="lobby.html">Register</button>
+        </form>
+        <br>
+        <p>Already have an account? <a href="/login_page">Login</a></p>
+    </div>
+</body>
+</html>
