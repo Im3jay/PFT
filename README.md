@@ -7,3 +7,7 @@ git add requirements.txt
 To make env:
 ctrl+shift+p
 make new env
+
+
+
+venv
