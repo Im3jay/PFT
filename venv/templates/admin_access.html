@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Access</h1>
+        <div id="data-container"></div> <!-- Container to display database content -->
+        <button onclick="viewData()">View Data</button>
+        <button onclick="addData()">Add Data</button>
+        <button onclick="editData()">Edit Data</button>
+        <button onclick="deleteData()">Delete Data</button>
+    </div>
+
+    <script>
+        function viewData() {
+            // Make AJAX request to fetch data from the server
+            $.ajax({
+                url: '/view_data',
+                method: 'GET',
+                success: function(response) {
+                    // Display data in the container
+                    $('#data-container').html(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+
+        function addData() {
+            // Implement logic for adding data
+        }
+
+        function editData() {
+            // Implement logic for editing data
+        }
+
+        function deleteData() {
+            // Implement logic for deleting data
+        }
+    </script>
+</body>
+</html>

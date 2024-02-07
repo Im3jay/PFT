@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-        <h2>Account is successfully created.</h2>
-        <button>
-            <a type="button" href="register.html"> Register New Account</a>
-        </button> 
+        <h1>Welcome to the Lobby</h1>
+        <p>Click the button below to register:</p>
+        <form action="/registration" method="get">
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <div class="additional-buttons">
+            <a href="{{ url_for('proctor_login') }}" class="btn">Proctor</a>
+            <a href="{{ url_for('admin_login') }}" class="btn">Admin</a>
+        </div>
     </div>
 </body>
 </html>

@@ -1,55 +1,124 @@
+/* Lobby styles */
+.lobby-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+
+.proctor-button,
+.admin-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.proctor-button:hover,
+.admin-button:hover {
+    background-color: #0056b3;
+}
+
+.proctor-icon,
+.admin-icon {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Common styles for all devices */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
+    background-color: #f0f0f0;
     margin: 0;
     padding: 0;
 }
 
 .container {
-    max-width: 400px;
-    margin: 50px auto;
-    background-color: #fff;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    
 }
 
-h2 {
+/* Header styles */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
     text-align: center;
+}
+
+/* Button styles */
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Form styles */
+form {
     margin-bottom: 20px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 label {
     display: block;
     font-weight: bold;
-    margin-bottom: 5px;
-    margin-top: 8px;
 }
 
 input[type="text"],
-input[type="password"] {
-    width: calc(100% - 12px);
+input[type="password"],
+input[type="email"],
+select {
+    width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
-    border-radius: 3px;
+    border-radius: 5px;
     box-sizing: border-box;
+    font-size: 16px;
+    margin-top: 5px;
 }
 
-button {
+/* Table styles */
+table {
     width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+    border-collapse: collapse;
 }
 
-button:hover {
-    background-color: #45a049;
+table th, table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+/* Media query for smaller devices (e.g., mobile phones) */
+@media only screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    /* Adjust other styles as needed for smaller screens */
 }
