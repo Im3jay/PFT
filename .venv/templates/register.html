@@ -50,8 +50,34 @@
                 <input type="number" id="age" name="age" required>
             </div>
             <div class="form-group">
-                <label for="birthdate">Birthdate:</label>
-                <input type="datetime-local" id="birthdate" name="birthdate" required>
+                <label for="birth_date">Birthdate:</label>
+                <input type="date" id="birth_date" name="birth_date" required>
+            </div>
+            <div class="form-group">
+                <label for="unit">Unit:</label>
+                <select id="unit" name="unit" required>
+                    <option selected disabled>-- SELECT UNIT --</option>
+                    <option value="51E HHCO">51E HHCO</option>
+                    <option value="ESC">ESC</option>
+                    <option value="513ECB">513ECB</option>
+                    <option value="514ECB">514ECB</option>
+                    <option value="522ECB">522ECB</option>
+                    <option value="525ECB">525ECB</option>
+                    <option value="548ECB">548ECB</option>
+                    <option value="564ECB">564ECB</option>
+                    <option value="565ECB">565ECB</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="company">Company:</label>
+                <select id="company" name="company" required>
+                    <option selected disabled>-- SELECT COMPANY --</option>
+                    <option value="HHCO">51E HHCO</option>
+                    <option value="ALPHA COY">ALPHA COY</option>
+                    <option value="BRAVO COY">BRAVO COY</option>
+                    <option value="CHARLIE COY">CHARLIE COY</option>
+                    <option value="DELTA COY">DELTA COY</option>
+                </select>
             </div>
             <button type="submit" class="btn">Register</button>
         </form>

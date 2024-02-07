@@ -28,8 +28,11 @@ def registration():
         afpos_mos = request.form['afpos_mos']
         gender = request.form['gender']
         age = request.form['age']
+        birth_date = request.form['birth_date']
+        unit = request.form['unit']
+        company = request.form['company']
         cursor = db.cursor()
-        cursor.execute("INSERT INTO users (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, age) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, age))
+        cursor.execute("INSERT INTO users (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, age, birth_date, unit, company) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, age, birth_date, unit, company))
         db.commit()
         cursor.close()
         return redirect(url_for('lobby'))
@@ -64,9 +67,11 @@ def proctor_registration():
         name = request.form['name']
         afpsn = request.form['afpsn']
         password = request.form['password']
-        
+        rank = request.form['rank']
+        afpos_mos = request.form['afpos_mos']
+
         cursor = db.cursor()
-        cursor.execute("INSERT INTO proctor (name, afpsn, password) VALUES (%s, %s, %s)", (name, afpsn, password))
+        cursor.execute("INSERT INTO proctor (name, afpsn, password, rank, afpos_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afpos_mos))
         db.commit()
         cursor.close()
         
