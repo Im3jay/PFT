@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="topnav">
+        <a class="backsreen" href="#news"> Back</a>
+        <a class="active" href="#home" style="margin-left: 35%"> Physical Fitness Test</a>
+    </div>
     <div class="container">
         <h1>Registration Form</h1>
         <form action="/registration" method="POST">
@@ -44,6 +48,10 @@
             <div class="form-group">
                 <label for="age">Age:</label>
                 <input type="number" id="age" name="age" required>
+            </div>
+            <div class="form-group">
+                <label for="birthdate">Birthdate:</label>
+                <input type="datetime-local" id="birthdate" name="birthdate" required>
             </div>
             <button type="submit" class="btn">Register</button>
         </form>

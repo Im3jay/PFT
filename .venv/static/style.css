@@ -25,7 +25,7 @@
 
 .proctor-button:hover,
 .admin-button:hover {
-    background-color: #0056b3;
+    background-color: #000000;
 }
 
 .proctor-icon,
@@ -37,7 +37,7 @@
 /* Common styles for all devices */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
 }
@@ -51,7 +51,7 @@ body {
 /* Header styles */
 header {
     background-color: #333;
-    color: #fff;
+    color: #000000;
     padding: 10px 20px;
     text-align: center;
 }
@@ -59,16 +59,19 @@ header {
 /* Button styles */
 button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #000000;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    margin-left: 250px;
+    margin-right: 250px;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #000000;
 }
 
 /* Form styles */
@@ -78,11 +81,14 @@ form {
 
 .form-group {
     margin-bottom: 10px;
+    margin-left: 250px;
+    margin-right: 250px;
 }
 
 label {
     display: block;
     font-weight: bold;
+    color: #000000
 }
 
 input[type="text"],
@@ -91,7 +97,7 @@ input[type="email"],
 select {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #eec;
     border-radius: 5px;
     box-sizing: border-box;
     font-size: 16px;
@@ -114,11 +120,53 @@ table th {
     background-color: #f2f2f2;
 }
 
+h1 {
+    margin-bottom: 10px;
+    margin-left: 250px;
+    margin-right: 250px;
+    text-align: center;
+    color: #000000
+}
+
+p{
+    margin-bottom: 10px;
+    margin-left: 250px;
+    margin-right: 250px;
+}
+
+input{
+    background-color: #ececec;
+}
+
+select{
+    background-color: #ececec;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #32620E;
+}
+  
+  /* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    font-size: clamp(1rem,1vw + 0.75rem,1.5rem);
+    color: #ffffff;
+    background-color: #32620E ;
+    text-align: center;
+    padding: 14px 25px;
+    text-decoration: none;
+    
+    display: flex;
+}
+  
+  /* Change the color of links on hover */
+  /* Add a color to the active/current link */
 /* Media query for smaller devices (e.g., mobile phones) */
-@media only screen and (max-width: 768px) {
+/*@media only screen and (max-width: 768px) {
     .container {
         padding: 10px;
     }
 
-    /* Adjust other styles as needed for smaller screens */
-}
+    /* Adjust other styles as needed for smaller screens 
+}*/
