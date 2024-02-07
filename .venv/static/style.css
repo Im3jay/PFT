@@ -153,12 +153,19 @@ select{
     font-size: clamp(1rem,1vw + 0.75rem,1.5rem);
     color: #ffffff;
     background-color: #32620E ;
-    text-align: center;
-    padding: 14px 25px;
+    text-align: left;
+    padding: 14px 1px;
     text-decoration: none;
-    
     display: flex;
+    font-family: "Impact","sans-serif";
+    margin-left: 100px;
 }
+
+.image{
+    width: max-content;
+    height: max-content;
+}
+
   
   /* Change the color of links on hover */
   /* Add a color to the active/current link */
