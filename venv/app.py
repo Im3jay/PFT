@@ -162,6 +162,20 @@ def view_data():
     cursor.close()
     return jsonify({"users": user_data, "proctors": proctor_data})
 
+# Route for Proctor Access Page
+@app.route('/pft_kmwalk')
+def pft_kmwalk():
+    return render_template('pft_kmwalk.html')
+
+# Route for Proctor Access Page
+@app.route('/pft_pushup')
+def pft_pushup():
+    return render_template('pft_pushup.html')
+
+# Route for Proctor Access Page
+@app.route('/pft_situp')
+def pft_situp():
+    return render_template('pft_situp.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
