@@ -15,7 +15,18 @@
         <form action="/registration" method="POST">
             <div class="form-group">
                 <label for="rank">Rank:</label>
-                <input type="text" id="rank" name="rank" required>
+                <select id="rank" name="rank" required>
+                    <option selected disabled>-- SELECT RANK --</option>
+                    <option value="Pvt">Pvt </option>
+                    <option value="PFC">PFC</option>
+                    <option value="Cpl">Cpl</option>
+                    <option value="Sgt">Sgt</option>
+                    <option value="SSgt">SSgt</option>
+                    <option value="TSgt">TSgt</option>
+                    <option value="MSgt">MSgt</option>
+                    <option value="SMSgt">SMSgt</option>
+                    <option value="CMSgt">CMSgt</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="first_name">First Name:</label>
@@ -31,7 +42,7 @@
             </div>
             <div class="form-group">
                 <label for="afpsn">AFPSN:</label>
-                <input type="text" id="afpsn" name="afpsn" required>
+                <input type="text" id="afpsn" pattern="\d{6}" maxlength="6" name="afpsn" required>
             </div>
             <div class="form-group">
                 <label for="afpos_mos">AFPOS MOS:</label>
@@ -46,7 +57,7 @@
             </div>
             <div class="form-group">
                 <label for="age">Age:</label>
-                <input type="number" id="age" name="age" required>
+                <input type="number" id="age" name="age" min="0" required>
             </div>
             <div class="form-group">
                 <label for="birth_date">Birthdate:</label>

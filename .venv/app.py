@@ -167,20 +167,58 @@ def view_data():
     cursor.close()
     return jsonify({"users": user_data, "proctors": proctor_data})
 
-# Route for Proctor Access Page
-@app.route('/pft_kmwalk')
-def pft_kmwalk():
-    return render_template('pft_kmwalk.html')
+# Route for Run Page
+@app.route('/pft_kmrun')
+def pft_kmrun():
+    return render_template('pft_kmrun.html')
 
-# Route for Proctor Access Page
+# Route for Pushup Page
 @app.route('/pft_pushup')
 def pft_pushup():
     return render_template('pft_pushup.html')
 
-# Route for Proctor Access Page
+# Route for Situp Page
 @app.route('/pft_situp')
 def pft_situp():
     return render_template('pft_situp.html')
+
+
+@app.route('/record_pushup', methods=['POST'])
+def record_pushup():
+    if request.method == 'POST':
+        pushup_reps = request.form['pushup_reps']
+        
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO pft_pushup_results (reps) VALUES (%s)", (pushup_reps,))
+        db.commit()
+        cursor.close()
+        
+        return redirect(url_for('proctor_access'))
+
+@app.route('/record_situp', methods=['POST'])
+def record_situp():
+    if request.method == 'POST':
+        situp_reps = request.form['situp_reps']
+        
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO pft_situp_results (reps) VALUES (%s)", (situp_reps,))
+        db.commit()
+        cursor.close()
+        
+        return redirect(url_for('proctor_access'))
+
+@app.route('/record_kmrun', methods=['POST'])
+def record_kmrun():
+    if request.method == 'POST':
+        km_run = request.form['km_run']
+        
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO pft_kmrun_results (distance) VALUES (%s)", (km_run,))
+        db.commit()
+        cursor.close()
+        
+        return redirect(url_for('proctor_access'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

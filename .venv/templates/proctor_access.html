@@ -7,17 +7,48 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
     <header>
         <h1>Welcome Proctor</h1>
     </header>
     <div class="container">
         <div class="proctor-access-container">
-            <!-- You can add any additional content or buttons here -->
-            <p>This is the Proctor Access page. You have successfully logged in as a proctor.</p>
+            <!-- Push-up Form -->
+            <form action="/record_pushup" method="POST">
+                <h2>Record Push-up</h2>
+                <div class="form-group">
+                    <label for="pushup_reps">Repetitions:</label>
+                    <input type="number" id="pushup_reps" name="pushup_reps" min="0" required>
+                </div>
+                <button type="submit">Submit Push-up</button>
+            </form>
+
+
+            <!-- Sit-up Form -->
+            <form action="/record_situp" method="POST">
+                <h2>Record Sit-up</h2>
+                <div class="form-group">
+                    <label for="situp_reps">Repetitions:</label>
+                    <input type="number" id="situp_reps" name="situp_reps" min="0" required>
+                </div>
+                <button type="submit">Submit Sit-up</button>
+            </form>
+
+
+            <!-- Kilometer Run Form -->
+            <form action="/record_kmrun" method="POST">
+                <h2>Record Kilometer Run</h2>
+                <div class="form-group">
+                    <label for="km_run">Distance (km):</label>
+                    <input type="number" id="km_run" name="km_run" step="0.01" min="0" required>
+                </div>
+                <button type="submit">Submit Kilometer Run</button>
+            </form>
+
+
+            <!-- Back Button -->
             <a href="/pft_pushup">Push Up</a>
             <a href="/pft_situp">Sit Up</a>
-            <a href="/pft_kmwalk">Kilometer Walk</a>
+            <a href="/pft_kmrun">Kilometer Run</a>
             <a href="/proctor_login">Back</a>
         </div>
     </div>
