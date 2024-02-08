@@ -13,25 +13,25 @@
     <div class="container">
         <h1>Proctor Registration</h1>
         <form action="/proctor_registration" method="post">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
+            <div class="wrapper">
+                <input class="name-input" type="text" id="name" name="name" required>
+                <label class="name-label" for="name">Name:</label>
             </div>
-            <div class="form-group">
-                <label for="rank">Rank:</label>
-                <input type="text" id="rank" name="rank" required>
+            <div class="wrapper">
+                <input class="name-input" type="text" id="rank" name="rank" required>
+                <label class="name-label" for="rank">Rank:</label>
             </div>
-            <div class="form-group">
-                <label for="afpos_mos">AFPOS MOS:</label>
-                <input type="text" id="afpos_mos" name="afpos_mos" required>
+            <div class="wrapper">
+                <input class="name-input" type="text" id="afpos_mos" name="afpos_mos" required>
+                <label class="name-label" for="afpos_mos">AFPOS MOS:</label>
             </div>
-            <div class="form-group">
-                <label for="afpsn">AFPSN:</label>
-                <input type="text" id="afpsn" name="afpsn" pattern="\d{6}" maxlength="6" title="AFPSN must be a 6-digit number" required>
+            <div class="wrapper">
+                <input class="name-input" type="text" id="afpsn" name="afpsn" pattern="\d{6}" maxlength="6" title="AFPSN must be a 6-digit number" required>
+                <label class="name-label" for="afpsn">AFPSN:</label>
             </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+            <div class="wrapper">
+                <input class="name-input" type="password" id="password" name="password" required>
+                <label class="name-label" for="password">Password:</label>
             </div>
             <button type="submit" class="btn">Register</button>
         </form>
