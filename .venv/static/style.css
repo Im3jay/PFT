@@ -43,9 +43,10 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
+
 }
 
 /* Header styles */
@@ -66,8 +67,9 @@ button {
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-bottom: 10px;
-    margin-left: 250px;
-    margin-right: 250px;
+    width: 50%;
+    font-size: 90%;
+    text-align: center;
 }
 
 button:hover {
@@ -122,16 +124,17 @@ table th {
 
 h1 {
     margin-bottom: 10px;
-    margin-left: 250px;
-    margin-right: 250px;
     text-align: center;
-    color: #000000
+    color: #000000;
+    width: 80%;
+    font-size: 160%;
 }
 
 p{
     margin-bottom: 10px;
-    margin-left: 250px;
-    margin-right: 250px;
+    width: 80%;
+    font-size: 100%;
+    text-align: center;
 }
 
 input{
@@ -145,6 +148,7 @@ select{
 .topnav {
     overflow: hidden;
     background-color: #32620E;
+    max-width: 100%;
 }
   
   /* Style the links inside the navigation bar */
@@ -159,6 +163,9 @@ select{
     display: flex;
     font-family: "Impact","sans-serif";
     margin-left: 100px;
+    width: 40%;
+    
+
 }
 
 .image{
