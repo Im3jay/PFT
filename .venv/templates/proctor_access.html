@@ -1,56 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proctor Access</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Welcome Proctor</h1>
-    </header>
-    <div class="container">
-        <div class="proctor-access-container">
-            <!-- Push-up Form -->
-            <form action="/record_pushup" method="POST">
-                <h2>Record Push-up</h2>
-                <div class="form-group">
-                    <label for="pushup_reps">Repetitions:</label>
-                    <input type="number" id="pushup_reps" name="pushup_reps" min="0" required>
-                </div>
-                <button type="submit">Submit Push-up</button>
-            </form>
+    <form action="/proctor_access" method="post">
+        Serial Number: <input type="text" name="afpsn" id="afpsn"><br>
+        <div id="usernameDisplay"></div><br>
+        <button type="button" onclick="searchafpsn()">Search</button><br><br>
+        
+        <!-- Push-up data -->
+        Pushup Count: <input type="text" name="raw_pushup" id="raw_pushup" disabled><br>
+        
+        <!-- Sit-up data -->
+        Situp Count: <input type="text" name="raw_situp" id="raw_situp" disabled><br>
+        
+        <!-- Date -->
+        Date (YYYY-MM-DD): <input type="text" name="act_date" id="act_date" disabled><br><br>
+        
+        <input type="submit" value="Submit" id="submitButton" disabled>
+    </form>
 
+    <script>
+        function searchafpsn() {
+            var afpsn = document.getElementById("afpsn").value;
 
-            <!-- Sit-up Form -->
-            <form action="/record_situp" method="POST">
-                <h2>Record Sit-up</h2>
-                <div class="form-group">
-                    <label for="situp_reps">Repetitions:</label>
-                    <input type="number" id="situp_reps" name="situp_reps" min="0" required>
-                </div>
-                <button type="submit">Submit Sit-up</button>
-            </form>
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("usernameDisplay").innerHTML = this.responseText;
 
-
-            <!-- Kilometer Run Form -->
-            <form action="/record_kmrun" method="POST">
-                <h2>Record Kilometer Run</h2>
-                <div class="form-group">
-                    <label for="km_run">Distance (km):</label>
-                    <input type="number" id="km_run" name="km_run" step="0.01" min="0" required>
-                </div>
-                <button type="submit">Submit Kilometer Run</button>
-            </form>
-
-
-            <!-- Back Button -->
-            <a href="/pft_pushup">Push Up</a>
-            <a href="/pft_situp">Sit Up</a>
-            <a href="/pft_kmrun">Kilometer Run</a>
-            <a href="/proctor_login">Back</a>
-        </div>
-    </div>
+                    if (this.responseText.trim().length > 0) {
+                        document.getElementById("raw_pushup").disabled = false;
+                        document.getElementById("raw_situp").disabled = false;
+                        document.getElementById("act_date").disabled = false;
+                        document.getElementById("submitButton").disabled = false;
+                    } else {
+                        document.getElementById("raw_pushup").value = "";
+                        document.getElementById("raw_situp").value = "";
+                        document.getElementById("act_date").value = "";
+                        document.getElementById("raw_pushup").disabled = true;
+                        document.getElementById("raw_situp").disabled = true;
+                        document.getElementById("act_date").disabled = true;
+                        document.getElementById("submitButton").disabled = true;
+                    }
+                }
+            };
+            xhttp.open("GET", "/search_serial?afpsn=" + afpsn, true);
+            xhttp.send();
+        }
+    </script>
 </body>
 </html>
