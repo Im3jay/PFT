@@ -47,13 +47,12 @@ def proctor_login():
         password = request.form['password']
         
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM proctor WHERE afpsn = %s AND password = %s", (afpsn, password))
-        proctor = cursor.fetchone()
+        cursor.execute("SELECT * FROM proctor_account WHERE afpsn = %s AND password = %s", (afpsn, password))
+        proctor_account = cursor.fetchone()
         cursor.close()
-        
-        if proctor:
+        if proctor_account:
             # Store proctor information in session
-            session['proctor'] = proctor
+            session['proctor_access'] = proctor_account # SESSION IS BROKEN ATM
             # Redirect to proctor_access.html
             return redirect(url_for('proctor_access'))
         else:
@@ -72,7 +71,7 @@ def proctor_registration():
         afpos_mos = request.form['afpos_mos']
 
         cursor = db.cursor()
-        cursor.execute("INSERT INTO proctor (name, afpsn, password, rank, afpos_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afpos_mos))
+        cursor.execute("INSERT INTO proctor_registration (name, afpsn, password, rank, afpos_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afpos_mos))
         db.commit()
         cursor.close()
         
