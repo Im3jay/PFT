@@ -28,12 +28,11 @@ def registration():
         afpsn = request.form['afpsn']
         afpos_mos = request.form['afpos_mos']
         gender = request.form['gender']
-        age = request.form['age']
         birth_date = request.form['birth_date']
         unit = request.form['unit']
         company = request.form['company']
         cursor = db.cursor()
-        cursor.execute("INSERT INTO users (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, age, birth_date, unit, company) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, age, birth_date, unit, company))
+        cursor.execute("INSERT INTO users_account (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, birth_date, unit, company) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, birth_date, unit, company))
         db.commit()
         cursor.close()
         return redirect(url_for('lobby'))
@@ -84,7 +83,7 @@ def search_serial():
 
     # Check if serial number exists
     cursor = db.cursor()
-    cursor.execute("SELECT first_name FROM users WHERE afpsn = %s", (afpsn,)) #Adjust the output
+    cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,)) #Adjust the output
     first_name = cursor.fetchone()
 
     if first_name:
@@ -101,7 +100,7 @@ def proctor_access():
 
         # Check if serial number exists
         cursor = db.cursor()
-        cursor.execute("SELECT first_name FROM users WHERE afpsn = %s", (afpsn,))
+        cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,))
         first_name = cursor.fetchone()
 
         if not first_name:
@@ -226,13 +225,13 @@ def delete_data():
 def view_data():
     cursor = db.cursor()
     # Fetch data from users table
-    cursor.execute("SELECT * FROM users")
+    cursor.execute("SELECT * FROM users_account")
     user_data = cursor.fetchall()
     # Fetch data from proctor_credentials table
     cursor.execute("SELECT * FROM proctor_credentials")
     proctor_data = cursor.fetchall()
     cursor.close()
-    return jsonify({"users": user_data, "proctors": proctor_data})
+    return jsonify({"users_account": user_data, "proctors": proctor_data})
 
 # Route for Run Page
 @app.route('/pft_kmrun')
