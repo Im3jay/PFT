@@ -193,6 +193,10 @@ def admin_login():
 def admin_access():
     return render_template('admin_access.html')
 
+@app.route('/proctol_welcome')
+def proctor_welcome():
+    return render_template('proctor_welcome.html')
+
 # # Route for viewing data (AJAX request)
 # @app.route('/view_data')
 # def view_data():
