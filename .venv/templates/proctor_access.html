@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='proctor.css') }}">
     <title>Proctor Access</title>
 </head>
 <body>
+    <div class="topnav">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2">
+        <a href="#home"> 51st Engineer Brigade, Philippine Army</a>
+    </div>
     <form action="/proctor_access" method="post">
         Serial Number: <input type="text" name="afpsn" id="afpsn"><br>
         <div id="usernameDisplay"></div><br>
         <button type="button" onclick="searchafpsn()">Search</button><br><br>
         
         <!-- Push-up data -->
-        Pushup Count: <input type="text" name="raw_pushup" id="raw_pushup" disabled><br>
+        Push-up Count: <input type="text" name="raw_pushup" id="raw_pushup" disabled><br>
         
         <!-- Sit-up data -->
-        Situp Count: <input type="text" name="raw_situp" id="raw_situp" disabled><br>
+        Sit-up Count: <input type="text" name="raw_situp" id="raw_situp" disabled><br>
         
         <!-- Date -->
-        Date (YYYY-MM-DD): <input type="text" name="act_date" id="act_date" disabled><br><br>
+        Date (YYYY-MM-DD): <input type="date" name="act_date" id="act_date" disabled><br><br>
         
         <input type="submit" value="Submit" id="submitButton" disabled>
     </form>
