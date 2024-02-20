@@ -14,6 +14,9 @@
     </div>
     <img src="https://army.mil.ph/home/images/2022/pamu-logo/51st-engi.png" class="logo">
     <div class="container">
+            {% if 'proctor_access' in session %} <!-- The array number beside the session tells which tuple section to use -->
+            <p>Logged in as {{ session['proctor_access']['name'] }} <a href="{{ url_for('proctor_logout') }}">Logout</a> </p>
+            {% endif %}
             <h1>Physical Fitness Test Activity</h1>
             <div class="additional-buttons">
                 <a href="{{ url_for('proctor_access') }}" class="btn">Proceed</a>

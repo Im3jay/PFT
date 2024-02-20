@@ -1,3 +1,4 @@
+<!-- proctor_access.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,6 +13,9 @@
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2">
         <a href="#home"> 51st Engineer Brigade, Philippine Army</a>
     </div>
+    {% if 'proctor_access' in session %}
+    <p>Logged in as {{ session['proctor_access']['name'] }}</p>
+    {% endif %}
     <form action="/proctor_access" method="post">
         Serial Number: <input type="text" name="afpsn" id="afpsn"><br>
         <div id="usernameDisplay"></div><br>

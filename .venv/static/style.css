@@ -8,6 +8,13 @@
     margin-bottom: 20px;
 }
 
+.logo_2 {
+    position: relative;
+    width: 30%;
+    height: 30%;
+    float: left;
+}
+
 .proctor-button,
 .admin-button {
     padding: 10px 20px;

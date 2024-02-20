@@ -1,8 +1,12 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, session
 from datetime import datetime
 import mysql.connector
+import uuid
 
 app = Flask(__name__)
+
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+active_sessions = {}
 
 # Connect to MySQL database
 db = mysql.connector.connect(
@@ -49,15 +53,43 @@ def proctor_login():
         cursor.execute("SELECT * FROM proctor_account WHERE afpsn = %s AND password = %s", (afpsn, password))
         proctor_account = cursor.fetchone()
         cursor.close()
+
         if proctor_account:
+            proctor_id = proctor_account[0]  # Assuming the first element is the ID
+            proctor_name = proctor_account[1]  # Assuming the second element is the name
+            # Check if the user has an active session
+            if proctor_id in active_sessions.values():
+                return render_template('proctor_login.html', error="Another session is already active for this account.")
+            
+            # Clear existing sessions for this user (in case of multiple logins)
+            clear_sessions_for_user(proctor_id)
+            
             # Store proctor information in session
-            session['proctor_access'] = proctor_account # SESSION IS BROKEN ATM
+            session['proctor_access'] = {'id': proctor_id, 'name': proctor_name}
+            # Generate a unique session identifier using UUID
+            session_id = str(uuid.uuid4())
+            # Add session ID to active sessions
+            active_sessions[session_id] = proctor_id
+            # Store session ID in session cookie
+            session['session_id'] = session_id
             # Redirect to proctor_access.html
-            return redirect(url_for('proctor_access'))
+            return redirect(url_for('proctor_welcome'))
         else:
             # Redirect to proctor_login.html with error message
             return render_template('proctor_login.html', error="Invalid AFPSN or password. Please try again.")
     return render_template('proctor_login.html')
+
+@app.route('/proctor_logout')
+def proctor_logout():
+    # Remove session ID from active sessions
+    active_sessions.pop(session['session_id'], None)
+    # Clear session data
+    session.clear()
+    return redirect(url_for('proctor_login'))
+
+def clear_sessions_for_user(user_id):
+    global active_sessions
+    active_sessions = {sid: uid for sid, uid in active_sessions.items() if uid != user_id}
 
 # Route for Proctor Registration Page
 @app.route('/proctor_registration', methods=['GET', 'POST'])
