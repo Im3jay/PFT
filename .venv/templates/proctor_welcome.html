@@ -8,18 +8,32 @@
     <title>Proctor Welcome</title>
 </head>
 <body>
-    <div class="topnav">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2">
-        <a href="#home"> 51st Engineer Brigade, Philippine Army</a>
+    <!--<div class="topnav"> -->
+    <div class="page-topnav">
+        <a href="#home"> <!-- to lobby -->
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2" style="width: 60px; height: auto;">
+        </a>
+        <a class="page-font">51st Engineer Brigade, Philippine Army</a>
     </div>
-    <img src="https://army.mil.ph/home/images/2022/pamu-logo/51st-engi.png" class="logo">
+    <div class="page-container">
+        <div class="left-text">Physical Fitness Test Activity</div>
+        <img src="https://army.mil.ph/home/images/2022/pamu-logo/51st-engi.png" class="right-logo">
+    </div>
+    <div>
+        <a href="{{ url_for('proctor_logout') }}">Logout</a>
+    </div>
+    
     <div class="container">
             {% if 'proctor_access' in session %} <!-- The array number beside the session tells which tuple section to use -->
-            <p>Logged in as {{ session['proctor_access']['name'] }} <a href="{{ url_for('proctor_logout') }}">Logout</a> </p>
+            <p>Welcome to PFT Proctor: {{ session['proctor_access']['name'] }}!</p>
             {% endif %}
-            <h1>Physical Fitness Test Activity</h1>
+            <p>Push-up Test\n\n\n</p>
+            <p>Sit-up Test</p>
+            <p>3:2 KM Run Test</p>
             <div class="additional-buttons">
-                <a href="{{ url_for('proctor_access') }}" class="btn">Proceed</a>
+                <form action="/proctor_access" method="get">
+                    <button type="submit" class="btn">Start</button>
+                </form>
             </div>
     </div>
 </body>
