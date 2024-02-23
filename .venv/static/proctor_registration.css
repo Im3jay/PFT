@@ -1,0 +1,203 @@
+.container{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #32620E;
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    margin-bottom: 1px;
+    margin-top: 2px;
+    margin-left: auto;
+    margin-right:auto;
+    text-align: center;
+    color: #ffffff;
+    width: 90%;
+    font-size: 250%;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+h2{
+    margin-bottom: 10px;
+    margin-top: 1px;
+    margin-left: auto;
+    margin-right:auto;
+    text-align: center;
+    color: #ffffff;
+    width: 90%;
+    font-size: 180%;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+h3{
+    margin-bottom: 10px;
+    margin-top: 8px;
+    margin-left: auto;
+    margin-right:auto;
+    text-align: center;
+    color: #ffffff;
+    width: 90%;
+    font-size: 100%;
+    font-weight: 100;
+}
+img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    width: 20%;
+    
+}
+
+.button{
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40vh;
+    background-color: #000000;
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 5px;
+
+}
+
+p{
+    color:#fff
+}
+
+a[href] {
+    color: #d6c210da;
+  }
+
+.additional-buttons{
+    background-color: #EEEDEB;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    width: 10%;
+    height: 10%;
+}
+
+
+form {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.form-group {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 250px;
+    margin-right: 250px;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 8px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+button {
+    padding: 10px 10px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 8px;
+    width: 90%;
+    font-size: 90%;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+}
+
+button:hover {
+    background-color: #000000;
+}
+
+input[type="submit"],
+select{
+    padding: 10px 10px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    width: 30%;
+    font-size: 90%;
+}
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper{
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40vh;
+    background-color: #fff;
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 5px;
+}
+
+.name-input{
+    padding: 0.6rem 1.2rem;
+    color: #444;
+    font-size: 1.5rem;
+    border-radius: 5px;
+}
+
+.name-label{
+    position: absolute;
+    top: 0.6rem;
+    left: 1.2rem;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 1.2rem;
+    transition: 0.4s all;
+    padding-inline: 0.25rem;
+    font-size: 100%;
+}
+
+.name-input:focus~.name-label,
+.name-input:valid~.name-label {
+    top: -0.5rem;
+    left: 0.5rem;
+    background-color: #fff;
+    font-size: 1rem;
+}

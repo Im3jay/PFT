@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proctor Registration</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='proctor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='proctor_registration.css') }}">
 </head>
 <body>
-    <div class="page-topnav">
-        <a href="#home"> <!-- to lobby -->
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2" style="width: 60px; height: auto;">
-        </a>
-        <a class="page-font">51st Engineer Brigade, Philippine Army</a>
+    <div class="img">
+        <img src="https://scontent.fmnl17-1.fna.fbcdn.net/v/t39.30808-6/428158937_367754756019926_6591643617643230238_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=lxA1TfnAMkwAX9J-rWx&_nc_ht=scontent.fmnl17-1.fna&oh=00_AfDx_qCNIlfV1fdhGSK2nvVVtKDpKKaqkeboJxxkLq9wUw&oe=65DE78DA">
     </div>
     <div class="container">
-        <h1>Proctor Registration</h1>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <h1>PFT PROCTOR</h1>
+        <h2>REGISTRATION</h2>
         <form action="/proctor_registration" method="post">
             <div class="wrapper">
                 <input class="name-input" type="text" id="name" name="name" required>
@@ -36,7 +37,8 @@
                 <input class="name-input" type="password" id="password" name="password" required>
                 <label class="name-label" for="password">Password:</label>
             </div>
-            <button type="submit" class="btn">Register</button>
+            <div class="button">
+                <button type="submit" class="btn">Register</button></div>
         </form>
         <p>Already have an account? <a href="{{ url_for('proctor_login') }}">Login</a></p>
         <p>Back to <a href="{{ url_for('lobby') }}">Lobby</a></p>
