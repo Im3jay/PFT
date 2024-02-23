@@ -1,65 +1,124 @@
-<!-- proctor_access.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='proctor.css') }}">
     <title>Proctor Access</title>
 </head>
 <body>
-    <div class="topnav">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2">
-        <a href="#home"> 51st Engineer Brigade, Philippine Army</a>
+    <div class="page-topnav">
+        <a href="#home"> <!-- to lobby -->
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2" style="width: 60px; height: auto;">
+        </a>
+        <a class="page-font">51st Engineer Brigade, Philippine Army</a>
     </div>
     {% if 'proctor_access' in session %}
     <p>Logged in as {{ session['proctor_access']['name'] }}</p>
     {% endif %}
     <form action="/proctor_access" method="post">
-        Serial Number: <input type="text" name="afpsn" id="afpsn"><br>
+        Serial Number: <input type="text" name="afpsn" id="afpsn_id" onkeyup=suggestUsernames() on><br>
         <div id="usernameDisplay"></div><br>
-        <button type="button" onclick="searchafpsn()">Search</button><br><br>
         
         <!-- Push-up data -->
-        Push-up Count: <input type="text" name="raw_pushup" id="raw_pushup" disabled><br>
+        Pushup Count: <input type="text" name="raw_pushup" id="rawPushup_id" disabled><br>
         
         <!-- Sit-up data -->
-        Sit-up Count: <input type="text" name="raw_situp" id="raw_situp" disabled><br>
+        Situp Count: <input type="text" name="raw_situp" id="rawSitup_id" disabled><br>
         
         <!-- Date -->
-        Date (YYYY-MM-DD): <input type="date" name="act_date" id="act_date" disabled><br><br>
+        Date: <input type="date" name="act_date" id="actDate_id" disabled><br><br>
+        
+        <!-- Participant Number -->
+        Participant Number: <input type="text" name="participant_number" id="participantNumber" disabled><br><br>
         
         <input type="submit" value="Submit" id="submitButton" disabled>
     </form>
 
     <script>
-        function searchafpsn() {
-            var afpsn = document.getElementById("afpsn").value;
-
+        function suggestUsernames() {
+            var afpsn_id = document.getElementById("afpsn_id").value;
+    
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("usernameDisplay").innerHTML = this.responseText;
-
-                    if (this.responseText.trim().length > 0) {
-                        document.getElementById("raw_pushup").disabled = false;
-                        document.getElementById("raw_situp").disabled = false;
-                        document.getElementById("act_date").disabled = false;
-                        document.getElementById("submitButton").disabled = false;
-                    } else {
-                        document.getElementById("raw_pushup").value = "";
-                        document.getElementById("raw_situp").value = "";
-                        document.getElementById("act_date").value = "";
-                        document.getElementById("raw_pushup").disabled = true;
-                        document.getElementById("raw_situp").disabled = true;
-                        document.getElementById("act_date").disabled = true;
-                        document.getElementById("submitButton").disabled = true;
-                    }
                 }
             };
-            xhttp.open("GET", "/search_serial?afpsn=" + afpsn, true);
+            xhttp.open("GET", "/suggest_usernames?afpsn=" + afpsn_id, true);
             xhttp.send();
+        }
+    
+        function fillSerialNumber(username) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("afpsn_id").value = this.responseText;
+                    searchSerialNumber()
+                }
+            };
+            xhttp.open("GET", "/get_serial_number?username=" + username, true);
+            xhttp.send();
+  
+        }
+    
+        function searchSerialNumber() {
+    var afpsn_id = document.getElementById("afpsn_id").value;
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var userData = JSON.parse(this.responseText);
+            var displayHTML = '';
+            if (userData) {
+                displayHTML += 'Full Name: ' + userData.full_name + '<br>';
+                displayHTML += 'AFPOS MOS: ' + userData.afpos_mos + '<br>';
+                displayHTML += 'AFPSN: ' + userData.afpsn + '<br>';
+                displayHTML += 'Rank: ' + userData.rank + '<br>';
+            } else {
+                displayHTML = 'No user found.';
+            }
+            document.getElementById("usernameDisplay").innerHTML = displayHTML;
+
+            // Enable input fields if valid afpsn
+            if (userData) {
+                document.getElementById("rawPushup_id").disabled = false;
+                document.getElementById("rawSitup_id").disabled = false;
+                document.getElementById("actDate_id").disabled = false;
+                document.getElementById("participantNumber").disabled = false;
+                document.getElementById("submitButton").disabled = false;
+                checkExistingData();
+            }
+            
+            else {
+                // Clear input fields and disable them if not valid afpsn
+                document.getElementById("rawPushup_id").value = "";
+                document.getElementById("rawSitup_id").value = "";
+                document.getElementById("actDate_id").value = "";
+                document.getElementById("participantNumber").value = "";
+                document.getElementById("rawPushup_id").disabled = true;
+                document.getElementById("rawSitup_id").disabled = true;
+                document.getElementById("actDate_id").disabled = true;
+                document.getElementById("participantNumber").disabled = true;
+                document.getElementById("submitButton").disabled = true;
+            }
+        }
+    };
+    xhttp.open("GET", "/search_serial?afpsn=" + afpsn_id, true);
+    xhttp.send();
+}
+
+                function submitPushup() {
+            // Submit pushup count
+            document.getElementById("dataForm").action = "/submit_pushup";
+            document.getElementById("dataForm").submit();
+        }
+
+        function submitSitup() {
+            // Submit situp count
+            document.getElementById("dataForm").action = "/submit_situp";
+            document.getElementById("dataForm").submit();
         }
     </script>
     

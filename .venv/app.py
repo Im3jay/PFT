@@ -102,28 +102,55 @@ def proctor_registration():
         afpos_mos = request.form['afpos_mos']
 
         cursor = db.cursor()
-        cursor.execute("INSERT INTO proctor_registration (name, afpsn, password, rank, afpos_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afpos_mos))
+        cursor.execute("INSERT INTO proctor_account (name, afpsn, password, rank, afpos_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afpos_mos))
         db.commit()
         cursor.close()
         
         return redirect(url_for('proctor_login'))
     return render_template('proctor_registration.html')
 
+@app.route('/suggest_usernames')
+def suggest_usernames():
+    afpsn = request.args.get('afpsn')
+
+    cursor = db.cursor()
+    cursor.execute("SELECT first_name FROM users_account WHERE afpsn LIKE %s", (afpsn + '%',))
+    first_names = cursor.fetchall()
+
+    suggestions = ''.join(f"<div onclick='fillSerialNumber(\"{first_name[0]}\")'>{first_name[0]}</div>" for first_name in first_names)
+    return suggestions
+
+@app.route('/get_serial_number')
+def get_serial_number():
+    first_name = request.args.get('username')
+
+    cursor = db.cursor()
+    cursor.execute("SELECT afpsn FROM users_account WHERE first_name = %s", (first_name,))
+    afpsn = cursor.fetchone()
+
+    if afpsn:
+        return jsonify(int(afpsn[0]))
+    else:
+        return jsonify(None)
+
 @app.route('/search_serial', methods=['GET'])
 def search_serial():
     afpsn = request.args.get('afpsn')
 
     # Check if serial number exists
-    cursor = db.cursor()
-    cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,)) #Adjust the output
-    first_name = cursor.fetchone()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users_account WHERE afpsn = %s", (afpsn,))
+    user_info = cursor.fetchone()
 
-    if first_name:
-        print(f"Serial number {afpsn} found. first_name: {first_name[0]}")
-        return first_name[0]  # Return the first_name if found
+    if user_info:
+        print(f"Serial number {afpsn} found. User info: {user_info}")
+        # Combine first name, middle name, and surname
+        full_name = f"{user_info['first_name']} {user_info['middle_name']} {user_info['surname']}"
+        user_info['full_name'] = full_name
+        return jsonify(user_info)  # Return user information if found
     else:
         print(f"Serial number {afpsn} not found.")
-        return ""  # Return empty string if not found
+        return jsonify(None)  # Return None if serial number not found
 
 @app.route('/proctor_access', methods=['GET', 'POST'])
 def proctor_access():
@@ -140,19 +167,19 @@ def proctor_access():
 
         # Serial number exists, process the rest of the form data
         raw_pushup = request.form.get('raw_pushup')
-        raw_situp = request.form.get('raw_situp')
+        situp_count = request.form.get('raw_situp')
         act_date = request.form.get('act_date')
+        #participant_number = request.form.get('participant_number')
 
-        if not (raw_pushup and raw_situp and act_date):
-            return "Push-up count, sit-up count, or act_date is missing."
+        if not (raw_pushup and situp_count and act_date ): #and participant_number
+            return "Push-up count, sit-up count, date, or participant number is missing."
 
         try:
             act_date = datetime.strptime(act_date, '%Y-%m-%d').date()
         except ValueError:
             # Handle parsing error
             return "Error: Invalid date format"
-
-        # Process push-up data
+        
         cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
         existing_raw_pushup = cursor.fetchone()
 
@@ -285,6 +312,7 @@ def proctor_access():
         return "Data submitted successfully."
 
     return render_template('proctor_access.html')
+
 
 
 # Route for Admin registration page
