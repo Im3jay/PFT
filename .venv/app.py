@@ -102,28 +102,55 @@ def proctor_registration():
         afpos_mos = request.form['afpos_mos']
 
         cursor = db.cursor()
-        cursor.execute("INSERT INTO proctor_registration (name, afpsn, password, rank, afpos_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afpos_mos))
+        cursor.execute("INSERT INTO proctor_account (name, afpsn, password, rank, afpos_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afpos_mos))
         db.commit()
         cursor.close()
         
         return redirect(url_for('proctor_login'))
     return render_template('proctor_registration.html')
 
+@app.route('/suggest_usernames')
+def suggest_usernames():
+    afpsn = request.args.get('afpsn')
+
+    cursor = db.cursor()
+    cursor.execute("SELECT first_name FROM users_account WHERE afpsn LIKE %s", (afpsn + '%',))
+    first_names = cursor.fetchall()
+
+    suggestions = ''.join(f"<div onclick='fillSerialNumber(\"{first_name[0]}\")'>{first_name[0]}</div>" for first_name in first_names)
+    return suggestions
+
+@app.route('/get_serial_number')
+def get_serial_number():
+    first_name = request.args.get('username')
+
+    cursor = db.cursor()
+    cursor.execute("SELECT afpsn FROM users_account WHERE first_name = %s", (first_name,))
+    afpsn = cursor.fetchone()
+
+    if afpsn:
+        return jsonify(int(afpsn[0]))
+    else:
+        return jsonify(None)
+
 @app.route('/search_serial', methods=['GET'])
 def search_serial():
     afpsn = request.args.get('afpsn')
 
     # Check if serial number exists
-    cursor = db.cursor()
-    cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,)) #Adjust the output
-    first_name = cursor.fetchone()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users_account WHERE afpsn = %s", (afpsn,))
+    user_info = cursor.fetchone()
 
-    if first_name:
-        print(f"Serial number {afpsn} found. first_name: {first_name[0]}")
-        return first_name[0]  # Return the first_name if found
+    if user_info:
+        print(f"Serial number {afpsn} found. User info: {user_info}")
+        # Combine first name, middle name, and surname
+        full_name = f"{user_info['first_name']} {user_info['middle_name']} {user_info['surname']}"
+        user_info['full_name'] = full_name
+        return jsonify(user_info)  # Return user information if found
     else:
         print(f"Serial number {afpsn} not found.")
-        return ""  # Return empty string if not found
+        return jsonify(None)  # Return None if serial number not found
 
 @app.route('/proctor_access', methods=['GET', 'POST'])
 def proctor_access():
@@ -140,28 +167,82 @@ def proctor_access():
 
         # Serial number exists, process the rest of the form data
         raw_pushup = request.form.get('raw_pushup')
-        raw_situp = request.form.get('raw_situp')
+        situp_count = request.form.get('raw_situp')
         act_date = request.form.get('act_date')
+        #participant_number = request.form.get('participant_number')
 
-        if not (raw_pushup and raw_situp and act_date):
-            return "Push-up count, sit-up count, or act_date is missing."
+        if not (raw_pushup and situp_count and act_date ): #and participant_number
+            return "Push-up count, sit-up count, date, or participant number is missing."
 
         try:
             act_date = datetime.strptime(act_date, '%Y-%m-%d').date()
         except ValueError:
             # Handle parsing error
             return "Error: Invalid date format"
-
-        # Process push-up data
+        
         cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
         existing_raw_pushup = cursor.fetchone()
 
         if existing_raw_pushup:
             print("Pushup data already submitted for this act_date.")
         else:
-            # Insert new pushup data
-            cursor.execute("INSERT INTO pft_pushup (afpsn,act_date,raw_pushup) VALUES (%s, %s,%s)",
-                           (afpsn, act_date, raw_pushup))
+            # Define the switch dictionary for male participants
+            switch_male = {
+                (21, 21): "age21_male",
+                (22, 26): "age22_26_male",
+                (27, 31): "age27_31_male",
+                (32, 36): "age32_36_male",
+                (37, 41): "age37_41_male",
+                (42, 46): "age42_46_male",
+                (47, 51): "age47_51_male",
+                (52, 56): "age52_56_male",
+                (57, 61): "age57_61_male",
+                (62, float('inf')): "age62_male"
+            }
+
+            # Define the switch dictionary for female participants
+            switch_female = {
+                (21, 21): "age21_female",
+                (22, 26): "age22_26_female",
+                (27, 31): "age27_31_female",
+                (32, 36): "age32_36_female",
+                (37, 41): "age37_41_female",
+                (42, 46): "age42_46_female",
+                (47, 51): "age47_51_female",
+                (52, 56): "age52_56_female",
+                (57, 61): "age57_61_female",
+                (62, float('inf')): "age62_female"
+            }
+
+            def execute_query(cursor, table_name, raw_pushup, afpsn, act_date):
+                query = f"SELECT {table_name} FROM `pushup_reference` WHERE repetitions = %s;"
+                cursor.execute(query, (raw_pushup,))
+                participant_score = cursor.fetchone()[0]
+                insert_query = f"INSERT INTO pft_pushup (afpsn, act_date, raw_pushup, pushup) VALUES (%s, %s, %s, %s)"
+                cursor.execute(insert_query, (afpsn, act_date, raw_pushup, participant_score))
+                db.commit()  # Commit the changes to the database
+
+            def process_participant(cursor, afpsn, act_date):
+                # Get participant's age
+                cursor.execute("SELECT DATEDIFF(CURDATE(), birth_date) DIV 365 FROM users_account WHERE afpsn = %s", (afpsn,))
+                participant_age = cursor.fetchone()[0]
+
+                # Get participant's gender
+                cursor.execute("SELECT gender FROM `users_account` WHERE afpsn = %s;", (afpsn,))
+                participant_gender = cursor.fetchone()[0]
+
+                if participant_gender == "M":
+                    switch = switch_male
+                else:
+                    switch = switch_female
+
+                for age_range, table_name in switch.items():
+                    if age_range[0] <= participant_age <= age_range[1]:
+                        print(f"Participant is {age_range[0]} - {age_range[1]}")
+                        execute_query(cursor, table_name, raw_pushup, afpsn, act_date)
+                        break
+
+            process_participant(cursor, afpsn, act_date)
 
         # Process sit-up data
         cursor.execute("SELECT * FROM pft_situp WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
@@ -170,15 +251,68 @@ def proctor_access():
         if existing_raw_situp:
             print("Situp data already submitted for this act_date.")
         else:
-            # Insert new situp data
-            cursor.execute("INSERT INTO pft_situp (afpsn,act_date,raw_situp) VALUES (%s, %s,%s)",
-                           (afpsn, act_date, raw_situp))
+            # Define the switch dictionary for male participants
+            switch_male = {
+                (21, 21): "age21_male",
+                (22, 26): "age22_26_male",
+                (27, 31): "age27_31_male",
+                (32, 36): "age32_36_male",
+                (37, 41): "age37_41_male",
+                (42, 46): "age42_46_male",
+                (47, 51): "age47_51_male",
+                (52, 56): "age52_56_male",
+                (57, 61): "age57_61_male",
+                (62, float('inf')): "age62_male"
+            }
 
-        db.commit()
+            # Define the switch dictionary for female participants
+            switch_female = {
+                (21, 21): "age21_female",
+                (22, 26): "age22_26_female",
+                (27, 31): "age27_31_female",
+                (32, 36): "age32_36_female",
+                (37, 41): "age37_41_female",
+                (42, 46): "age42_46_female",
+                (47, 51): "age47_51_female",
+                (52, 56): "age52_56_female",
+                (57, 61): "age57_61_female",
+                (62, float('inf')): "age62_female"
+            }
+
+            def execute_query(cursor, table_name, raw_situp, afpsn, act_date):
+                query = f"SELECT {table_name} FROM `situp_reference` WHERE repetitions = %s;"
+                cursor.execute(query, (raw_situp,))
+                participant_score = cursor.fetchone()[0]
+                insert_query = f"INSERT INTO pft_situp (afpsn, act_date, raw_situp, situp) VALUES (%s, %s, %s, %s)"
+                cursor.execute(insert_query, (afpsn, act_date, raw_pushup, participant_score))
+                db.commit()  # Commit the changes to the database
+
+            def process_participant(cursor, afpsn, act_date):
+                # Get participant's age
+                cursor.execute("SELECT DATEDIFF(CURDATE(), birth_date) DIV 365 FROM users_account WHERE afpsn = %s", (afpsn,))
+                participant_age = cursor.fetchone()[0]
+
+                # Get participant's gender
+                cursor.execute("SELECT gender FROM `users_account` WHERE afpsn = %s;", (afpsn,))
+                participant_gender = cursor.fetchone()[0]
+
+                if participant_gender == "M":
+                    switch = switch_male
+                else:
+                    switch = switch_female
+
+                for age_range, table_name in switch.items():
+                    if age_range[0] <= participant_age <= age_range[1]:
+                        print(f"Participant is {age_range[0]} - {age_range[1]}")
+                        execute_query(cursor, table_name, raw_pushup, afpsn, act_date)
+                        break
+
+            process_participant(cursor, afpsn, act_date)
 
         return "Data submitted successfully."
 
     return render_template('proctor_access.html')
+
 
 
 # Route for Admin registration page
