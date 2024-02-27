@@ -1,14 +1,7 @@
-.proctor-container{
-    text-align: center;
-    margin-top: 50px;
-}
-
-.container{
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    
-    
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -16,6 +9,31 @@ body {
     background-color: #EEEDEB;
     margin: 0;
     padding: 0;
+}
+
+button {
+    padding: 10px 10px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    width: 30%;
+    font-size: 90%;
+    text-align: center;
+}
+
+button:hover {
+    background-color: #000000;
+}
+
+form {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 h1{
@@ -28,9 +46,52 @@ h1{
     font-size: 130%;
 }
 
+input[type="text"],
+input[type="date"],
+input[type="password"],
+input[type="date"],
+select {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 8px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+input[type="submit"],
+select{
+    padding: 10px 10px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    width: 30%;
+    font-size: 90%;
+}
+
 .additional-buttons{
     background-color: #EEEDEB;
 }
+
+.container{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    
+    
+}
+
+.proctor-container{
+    text-align: center;
+    margin-top: 50px;
+}
+
 .topnav {
     overflow: hidden;
     background-color: #32620E;
@@ -70,71 +131,11 @@ h1{
     float: left;
 }
 
-form {
-    margin-bottom: 20px;
-    margin-top: 20px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
 .form-group {
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 250px;
     margin-right: 250px;
-}
-
-input[type="text"],
-input[type="date"],
-input[type="password"],
-input[type="date"],
-select {
-    width: 100%;
-    background-color: #ffffff;
-    padding: 8px;
-    border: 1px solid #ffffff;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 16px;
-    margin-top: 5px;
-}
-
-button {
-    padding: 10px 10px;
-    background-color: #000000;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 10px;
-    width: 30%;
-    font-size: 90%;
-    text-align: center;
-}
-
-button:hover {
-    background-color: #000000;
-}
-
-input[type="submit"],
-select{
-    padding: 10px 10px;
-    background-color: #000000;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 10px;
-    width: 30%;
-    font-size: 90%;
-}
-
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 .wrapper{
@@ -218,7 +219,7 @@ select{
 }
 
 .box {
-    width: 400px; /* Adjust as needed /
+    width: 400px;
     background-color: #f0f0f0;
     border-radius: 15px;
 }
@@ -230,18 +231,18 @@ select{
 }
 
 .content p {
-    flex: 1; / Takes remaining space /
+    flex: 1;
 }
 
 .content img {
     max-width: 100%;
     max-height: 150px;
     border-radius: 10px;
-    margin-left: 20px; / Adjust spacing between text and image /
+    margin-left: 20px;
 }
 
 .text {
-    flex: 1; / Takes remaining space */
+    flex: 1;
 }
 
 .text div {

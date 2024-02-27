@@ -32,6 +32,11 @@
                         <h2>Push-up Test</h2>
                         <p>A test used to measure upper body strength and endurance.</p>
                     </div>
+                    <div class="additional-buttons">
+                        <form action="/pft_pushup_record" method="get">
+                            <button type="submit" class="btn">Start</button>
+                        </form>
+                    </div>
                 </div>
                 <img src="">
             </div>
@@ -43,6 +48,11 @@
                     <div>
                         <h2>Sit-up Test</h2>
                         <p>A test used to measure abdominal strength and endurance.</p>
+                    </div>
+                    <div class="additional-buttons">
+                        <form action="/pft_situp_record" method="get">
+                            <button type="submit" class="btn">Start</button>
+                        </form>
                     </div>
                 </div>
                 <img src="">
@@ -56,6 +66,11 @@
                         <h2>3:2 KM Run Test</h2>
                         <p>A test used to measure cardiovascular endurance.</p>
                     </div>
+                    <div class="additional-buttons">
+                        <form action="/pft_kmrun_record" method="get">
+                            <button type="submit" class="btn">Start</button>
+                        </form>
+                    </div>
                 </div>
                 <img src="">
             </div>
@@ -66,14 +81,6 @@
 
     <div>
         <a href="{{ url_for('proctor_logout') }}">Logout</a>
-    </div>
-    
-    
-            <div class="additional-buttons">
-                <form action="/proctor_access" method="get">
-                    <button type="submit" class="btn">Start</button>
-                </form>
-        
     </div>
 </body>
 </html>
