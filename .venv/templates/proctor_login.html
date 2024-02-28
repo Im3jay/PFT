@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='proctor_login.css') }}">
-    <title>Proctor Login</title>
-</head>
-<body>
-    <div class="img">
-        <img src="https://scontent.fmnl17-1.fna.fbcdn.net/v/t39.30808-6/428158937_367754756019926_6591643617643230238_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=lxA1TfnAMkwAX9J-rWx&_nc_ht=scontent.fmnl17-1.fna&oh=00_AfDx_qCNIlfV1fdhGSK2nvVVtKDpKKaqkeboJxxkLq9wUw&oe=65DE78DA">
-    </div>
-    <div class="container">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-        <h1>PFT </h1>
-        <h2>Proctor</h2>
-        <h3>LOGIN YOUR ACCOUNT</h3>
-        <form method="post">
-            <div class="wrapper">
-                <input type="text" class="name-input" id="afpsn" name="afpsn" pattern="\d{6}" maxlength="6" title="AFPSN must be a 6-digit number" required/>
-                <label class="name-label" for="afpsn">AFPSN:</label>
-            </div>
-            <div class="wrapper">
-                <input type="password" class="name-input" id="password" name="password" required>
-                <label class="name-label" for="password">Password:</label>
-            </div>
-            <div class="button">
-            <button type="submit" class="btn">Login</button></div>
-        </form>
-        <p>Don't have an account? <a href="{{ url_for('proctor_registration') }}">Register</a></p>
-        <p>Back to <a href="{{ url_for('lobby') }}">Lobby</a></p>
-        <!-- <p>TRY <a href="{{ url_for('proctor_welcome') }}">here</a></p> --> <!-- No need for this, only enable for debugging!-->
-    </div>
-</body>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cy_test.css') }}">
+        <title>PFT - Proctor Login</title>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="background"> <!-- Start of Wallpaper -->
+
+            <div> <!-- Place logo here --> </div>
+
+            <form method="post"> <!-- Login Form -->
+                <h3>PFT Proctor</h3>
+                <h4>LOGIN YOUR ACCOUNT</h4>
+
+                <label for="afpsn">AFPSN:</label>
+                <input type="number" placeholder="Enter your AFPSN here" id="afpsn" name="afpsn" pattern="\d{6}" maxlength="6" title="- AFPSN must be a 6-digit number." required>
+
+                <label for="password">Password:</label>
+                <input type="password" placeholder="Enter your password here" id="password" name="password" required>
+
+                <button>Login</button>
+
+                <p>Don't have an account? <a href="{{ url_for('proctor_registration') }}">Register</a></p>
+                <p>Back to <a href="{{ url_for('lobby') }}">Lobby</a></p>
+
+            </form> <!-- End of Login Form -->
+
+        </div> <!-- End of Wallpaper -->
+    </body>
+
 </html>

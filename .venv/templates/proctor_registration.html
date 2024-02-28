@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proctor Registration</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='proctor_registration.css') }}">
-</head>
-<body>
-    <div class="img">
-        <img src="https://scontent.fmnl17-1.fna.fbcdn.net/v/t39.30808-6/428158937_367754756019926_6591643617643230238_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=lxA1TfnAMkwAX9J-rWx&_nc_ht=scontent.fmnl17-1.fna&oh=00_AfDx_qCNIlfV1fdhGSK2nvVVtKDpKKaqkeboJxxkLq9wUw&oe=65DE78DA">
-    </div>
-    <div class="container">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-        <h1>PFT PROCTOR</h1>
-        <h2>REGISTRATION</h2>
-        <form action="/proctor_registration" method="post">
-            <div class="wrapper">
-                <input class="name-input" type="text" id="name" name="name" required>
-                <label class="name-label" for="name">Name:</label>
-            </div>
-            <div class="wrapper">
-                <input class="name-input" type="text" id="rank" name="rank" required>
-                <label class="name-label" for="rank">Rank:</label>
-            </div>
-            <div class="wrapper">
-                <input class="name-input" type="text" id="afpos_mos" name="afpos_mos" required>
-                <label class="name-label" for="afpos_mos">AFPOS MOS:</label>
-            </div>
-            <div class="wrapper">
-                <input class="name-input" type="text" id="afpsn" name="afpsn" pattern="\d{6}" maxlength="6" title="AFPSN must be a 6-digit number" required>
-                <label class="name-label" for="afpsn">AFPSN:</label>
-            </div>
-            <div class="wrapper">
-                <input class="name-input" type="password" id="password" name="password" required>
-                <label class="name-label" for="password">Password:</label>
-            </div>
-            <div class="button">
-                <button type="submit" class="btn">Register</button></div>
-        </form>
-        <p>Already have an account? <a href="{{ url_for('proctor_login') }}">Login</a></p>
-        <p>Back to <a href="{{ url_for('lobby') }}">Lobby</a></p>
-    </div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cy_test.css') }}">
+        <title>PFT - Proctor Login</title>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="background"> <!-- Start of Wallpaper -->
+            
+            <form action="/proctor_registration" method="post"> <!-- Login Form -->
+                <h3>PFT Proctor</h3>
+                <h4>LOGIN YOUR ACCOUNT</h4>
+
+                <label for="name">Name:</label>
+                <input  type="text" placeholder="Enter your name here" id="name" name="name" required>
+
+                <label for="rank">Rank:</label>
+                <input  type="text" placeholder="Enter your rank here" id="rank" name="rank" required>
+
+                <label for="afpos_mos">AFPOS MOS:</label>
+                <input  type="text" placeholder="Enter your AFPOS MOS here" id="afpos_mos" name="afpos_mos" required>
+
+                <label for="afpsn">AFPSN:</label>
+                <input  type="text" placeholder="Enter your AFPSN here" id="afpsn" name="afpsn" pattern="\d{6}" maxlength="6" title="AFPSN must be a 6-digit number" required>
+
+                <label for="password">Password:</label>
+                <input  type="password" placeholder="Enter your password here" id="password" name="password" required>
+
+                <button>Login</button>
+
+                <p>Already have an account? <a href="{{ url_for('proctor_login') }}">Login</a></p>
+                <p>Back to <a href="{{ url_for('lobby') }}">Lobby</a></p>
+
+            </form> <!-- End of Login Form -->
+
+        </div> <!-- End of Wallpaper -->
+    </body>
+
 </html>
