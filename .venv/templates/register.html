@@ -45,7 +45,7 @@
                 <input type="text" id="afpsn" pattern="\d{6}" maxlength="6" name="afpsn" required>
             </div>
             <div class="form-group">
-                <label for="afpos_mos">AFPOS MOS:</label>
+                <label for="afpsn_mos">AFP_MOS:</label>
                 <input type="text" id="afpos_mos" name="afpos_mos" required>
             </div>
             <div class="form-group">
@@ -85,9 +85,11 @@
                     <option value="DELTA COY">DELTA COY</option>
                 </select>
             </div>
-            <button type="submit" class="btn">Register</button>
+           
         </form>
-        <p class="already-registered">Already registered? <a href="{{ url_for('lobby') }}">Go to Lobby</a></p>
+        <div style="text-align: center;">
+        <button type="submit" class="btn" style="text-align: center;">Register</button></div>
+        <p class="already-registered" >Already registered? <a href="{{ url_for('lobby') }}">Go to Lobby</a></p>
     </div>
 </body>
 </html>

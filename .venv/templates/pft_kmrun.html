@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,12 +19,11 @@
     <p>Logged in as {{ session['proctor_access']['name'] }}</p>
     {% endif %}
     <form action="/pft_kmrun_record" method="post">
-        Serial Number: <input type="text" name="afpsn" id="afpsn_id" onkeyup=suggestUsernames() on><br>
+        Serial Number: <input type="text" name="afpsn" id="afpsn_id" onkeyup="suggestUsernames()" on><br>
         <div id="usernameDisplay"></div><br>
         
-        
-        <!-- Sit-up data -->
-        kmrun Count: <input type="text" name="rawKmrun" id="rawKmrun_id" disabled><br>
+        <!-- Push-up data -->
+        KM run Count: <input type="text" name="raw_kmrun" id="rawKmrun_id" disabled><br>
         
         <!-- Date -->
         Date: <input type="date" name="act_date" id="actDate_id" disabled><br><br>
@@ -62,56 +62,74 @@
         }
     
         function searchSerialNumber() {
-    var afpsn_id = document.getElementById("afpsn_id").value;
+            var afpsn_id = document.getElementById("afpsn_id").value;
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var userData = JSON.parse(this.responseText);
-            var displayHTML = '';
-            if (userData) {
-                displayHTML += 'Full Name: ' + userData.full_name + '<br>';
-                displayHTML += 'AFPOS MOS: ' + userData.afpos_mos + '<br>';
-                displayHTML += 'AFPSN: ' + userData.afpsn + '<br>';
-                displayHTML += 'Rank: ' + userData.rank + '<br>';
-            } else {
-                displayHTML = 'No user found.';
-            }
-            document.getElementById("usernameDisplay").innerHTML = displayHTML;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var userData = JSON.parse(this.responseText);
+                    var displayHTML = '';
+                    if (userData) {
+                        displayHTML += 'Full Name: ' + userData.full_name + '<br>';
+                        displayHTML += 'AFPOS MOS: ' + userData.afpos_mos + '<br>';
+                        displayHTML += 'AFPSN: ' + userData.afpsn + '<br>';
+                        displayHTML += 'Rank: ' + userData.rank + '<br>';
 
-            // Enable input fields if valid afpsn
-            if (userData) {
-                document.getElementById("rawKmrun_id").disabled = false;
-                document.getElementById("actDate_id").disabled = false;
-                document.getElementById("participantNumber").disabled = false;
-                document.getElementById("submitButton").disabled = false;
-                checkExistingData();
-            }
-            
-            else {
-                // Clear input fields and disable them if not valid afpsn
-                document.getElementById("rawKmrun_id").value = "";
-                document.getElementById("actDate_id").value = "";
-                document.getElementById("participantNumber").value = "";
-                document.getElementById("rawKmrun_id").disabled = true;
-                document.getElementById("actDate_id").disabled = true;
-                document.getElementById("participantNumber").disabled = true;
-                document.getElementById("submitButton").disabled = true;
-            }
+                        // Check if data exists for today's date in pft_kmrun table
+                        checkExistingKmrunData(userData.afpsn);
+                    } else {
+                        displayHTML = 'No user found.';
+                        // Clear input fields and disable them
+                        clearAndDisableInputs();
+                    }
+                    document.getElementById("usernameDisplay").innerHTML = displayHTML;
+                }
+            };
+            xhttp.open("GET", "/search_serial?afpsn=" + afpsn_id, true);
+            xhttp.send();
         }
-    };
-    xhttp.open("GET", "/search_serial?afpsn=" + afpsn_id, true);
-    xhttp.send();
-}
 
-        
+        function checkExistingKmrunData(afpsn) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var existingData = JSON.parse(this.responseText);
+                    if (existingData) {
+                        // Data exists, lock the text boxes
+                        lockTextBoxes();
+                    } else {
+                        // Data doesn't exist, enable the text boxes
+                        enableTextBoxes();
+                    }
+                }
+            };
+            xhttp.open("GET", "/check_existing_kmrun_data?afpsn=" + afpsn, true);
+            xhttp.send();
+        }
 
-        function submitKmRun() {
-            // Submit kmrun count
-            document.getElementById("dataForm").action = "/submit_kmrun";
-            document.getElementById("dataForm").submit();
+        function lockTextBoxes() {
+            document.getElementById("rawKmrun_id").disabled = true;
+            document.getElementById("actDate_id").disabled = true;
+            document.getElementById("participantNumber").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+        }
+
+        function enableTextBoxes() {
+            document.getElementById("rawKmrun_id").disabled = false;
+            document.getElementById("actDate_id").disabled = false;
+            document.getElementById("participantNumber").disabled = false;
+            document.getElementById("submitButton").disabled = false;
+        }
+
+        function clearAndDisableInputs() {
+            document.getElementById("rawKmrun_id").value = "";
+            document.getElementById("actDate_id").value = "";
+            document.getElementById("participantNumber").value = "";
+            document.getElementById("rawKmrun_id").disabled = true;
+            document.getElementById("actDate_id").disabled = true;
+            document.getElementById("participantNumber").disabled = true;
+            document.getElementById("submitButton").disabled = true;
         }
     </script>
-    
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,11 +19,10 @@
     <p>Logged in as {{ session['proctor_access']['name'] }}</p>
     {% endif %}
     <form action="/pft_situp_record" method="post">
-        Serial Number: <input type="text" name="afpsn" id="afpsn_id" onkeyup=suggestUsernames() on><br>
+        Serial Number: <input type="text" name="afpsn" id="afpsn_id" onkeyup="suggestUsernames()" on><br>
         <div id="usernameDisplay"></div><br>
         
-        
-        <!-- Sit-up data -->
+        <!-- Push-up data -->
         Situp Count: <input type="text" name="raw_situp" id="rawSitup_id" disabled><br>
         
         <!-- Date -->
@@ -62,56 +62,74 @@
         }
     
         function searchSerialNumber() {
-    var afpsn_id = document.getElementById("afpsn_id").value;
+            var afpsn_id = document.getElementById("afpsn_id").value;
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var userData = JSON.parse(this.responseText);
-            var displayHTML = '';
-            if (userData) {
-                displayHTML += 'Full Name: ' + userData.full_name + '<br>';
-                displayHTML += 'AFPOS MOS: ' + userData.afpos_mos + '<br>';
-                displayHTML += 'AFPSN: ' + userData.afpsn + '<br>';
-                displayHTML += 'Rank: ' + userData.rank + '<br>';
-            } else {
-                displayHTML = 'No user found.';
-            }
-            document.getElementById("usernameDisplay").innerHTML = displayHTML;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var userData = JSON.parse(this.responseText);
+                    var displayHTML = '';
+                    if (userData) {
+                        displayHTML += 'Full Name: ' + userData.full_name + '<br>';
+                        displayHTML += 'AFPOS MOS: ' + userData.afpos_mos + '<br>';
+                        displayHTML += 'AFPSN: ' + userData.afpsn + '<br>';
+                        displayHTML += 'Rank: ' + userData.rank + '<br>';
 
-            // Enable input fields if valid afpsn
-            if (userData) {
-                document.getElementById("rawSitup_id").disabled = false;
-                document.getElementById("actDate_id").disabled = false;
-                document.getElementById("participantNumber").disabled = false;
-                document.getElementById("submitButton").disabled = false;
-                checkExistingData();
-            }
-            
-            else {
-                // Clear input fields and disable them if not valid afpsn
-                document.getElementById("rawSitup_id").value = "";
-                document.getElementById("actDate_id").value = "";
-                document.getElementById("participantNumber").value = "";
-                document.getElementById("rawSitup_id").disabled = true;
-                document.getElementById("actDate_id").disabled = true;
-                document.getElementById("participantNumber").disabled = true;
-                document.getElementById("submitButton").disabled = true;
-            }
+                        // Check if data exists for today's date in pft_situp table
+                        checkExistingSitupData(userData.afpsn);
+                    } else {
+                        displayHTML = 'No user found.';
+                        // Clear input fields and disable them
+                        clearAndDisableInputs();
+                    }
+                    document.getElementById("usernameDisplay").innerHTML = displayHTML;
+                }
+            };
+            xhttp.open("GET", "/search_serial?afpsn=" + afpsn_id, true);
+            xhttp.send();
         }
-    };
-    xhttp.open("GET", "/search_serial?afpsn=" + afpsn_id, true);
-    xhttp.send();
-}
 
-        
+        function checkExistingSitupData(afpsn) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var existingData = JSON.parse(this.responseText);
+                    if (existingData) {
+                        // Data exists, lock the text boxes
+                        lockTextBoxes();
+                    } else {
+                        // Data doesn't exist, enable the text boxes
+                        enableTextBoxes();
+                    }
+                }
+            };
+            xhttp.open("GET", "/check_existing_situp_data?afpsn=" + afpsn, true);
+            xhttp.send();
+        }
 
-        function submitSitup() {
-            // Submit situp count
-            document.getElementById("dataForm").action = "/submit_situp";
-            document.getElementById("dataForm").submit();
+        function lockTextBoxes() {
+            document.getElementById("rawSitup_id").disabled = true;
+            document.getElementById("actDate_id").disabled = true;
+            document.getElementById("participantNumber").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+        }
+
+        function enableTextBoxes() {
+            document.getElementById("rawSitup_id").disabled = false;
+            document.getElementById("actDate_id").disabled = false;
+            document.getElementById("participantNumber").disabled = false;
+            document.getElementById("submitButton").disabled = false;
+        }
+
+        function clearAndDisableInputs() {
+            document.getElementById("rawSitup_id").value = "";
+            document.getElementById("actDate_id").value = "";
+            document.getElementById("participantNumber").value = "";
+            document.getElementById("rawSitup_id").disabled = true;
+            document.getElementById("actDate_id").disabled = true;
+            document.getElementById("participantNumber").disabled = true;
+            document.getElementById("submitButton").disabled = true;
         }
     </script>
-    
 </body>
 </html>
