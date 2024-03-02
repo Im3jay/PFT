@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <script src="{{ url_for('static', filename='logout.js') }}"></script>
+
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,9 +22,11 @@
                 <h4>Welcome to PFT Proctor:</h4>
                 {% if 'proctor_access' in session %}
                 <h4>{{ session['proctor_access']['name'] }}</h4>
-                {% endif %}
-                <!-- <p><a href="{{ url_for('proctor_registration') }}">Logout</a></p> -->
-                <!-- <a href="{{ url_for('proctor_logout') }}">Logout</a> -->
+                <a class="logout-link" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                <form id="logoutForm" action="{{ url_for('proctor_logout') }}" method="post" style="display: none;">
+                    <input type="hidden" name="_method" value="POST">
+                </form>
+                {% endif %}         
             </div>
 
             <a href="/pft_pushup_record" class="container2">

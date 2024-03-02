@@ -2,6 +2,9 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify, s
 from datetime import datetime
 import mysql.connector
 import uuid
+from functools import wraps
+from flask import request
+
 
 app = Flask(__name__)
 
@@ -15,6 +18,19 @@ db = mysql.connector.connect(
     password="",  
     database="registration_test"
 )
+
+# Custom middleware decorator to check for an active session
+def require_session(session_keys):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            for key in session_keys:
+                if key not in session:
+                    # Redirect to the login page if any of the keys is not in the session
+                    return redirect(url_for('proctor_login'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 # Route for lobby page
 @app.route('/')
@@ -72,24 +88,36 @@ def proctor_login():
             active_sessions[session_id] = proctor_id
             # Store session ID in session cookie
             session['session_id'] = session_id
-            # Redirect to proctor_access.html
+            # Redirect to proctor_welcome.html
             return redirect(url_for('proctor_welcome'))
         else:
             # Redirect to proctor_login.html with error message
             return render_template('proctor_login.html', error="Invalid AFPSN or password. Please try again.")
     return render_template('proctor_login.html')
 
-@app.route('/proctor_logout')
+@app.route('/proctor_logout', methods=['POST'])
 def proctor_logout():
     # Remove session ID from active sessions
-    active_sessions.pop(session['session_id'], None)
-    # Clear session data
+    if 'session_id' in session:
+        active_sessions.pop(session['session_id'], None)     
+    # Clear the entire session
     session.clear()
     return redirect(url_for('proctor_login'))
+
 
 def clear_sessions_for_user(user_id):
     global active_sessions
     active_sessions = {sid: uid for sid, uid in active_sessions.items() if uid != user_id}
+
+# New route to handle logout request from client-side JavaScript
+@app.route('/logout', methods=['POST'])
+def logout():
+    # Remove session ID from active sessions
+    if 'session_id' in session:
+        active_sessions.pop(session['session_id'], None)
+        # Clear session data
+        session.clear()
+    return 'Logged out successfully', 200
 
 # Route for Proctor Registration Page
 @app.route('/proctor_registration', methods=['GET', 'POST'])
@@ -359,7 +387,8 @@ def admin_login():
 def admin_access():
     return render_template('admin_access.html')
 
-@app.route('/proctol_welcome')
+@app.route('/proctor_welcome')
+@require_session(['proctor_access'])
 def proctor_welcome():
     return render_template('proctor_welcome.html')
 
@@ -456,6 +485,7 @@ def view_data():
 #         return redirect(url_for('proctor_access'))
 
 @app.route('/pft_situp_record', methods=['GET', 'POST'])
+@require_session(['proctor_access'])
 def pft_situp_record():
     if request.method == 'POST':
         afpsn = request.form.get('afpsn')
@@ -578,6 +608,7 @@ def check_existing_situp_data():
 ######
 
 @app.route('/pft_pushup_record', methods=['GET', 'POST'])
+@require_session(['proctor_access'])
 def pft_pushup_record():
     if request.method == 'POST':
         afpsn = request.form.get('afpsn')
@@ -698,6 +729,7 @@ def check_existing_pushup_data():
 ######
 
 @app.route('/pft_kmrun_record', methods=['GET', 'POST'])
+@require_session(['proctor_access'])
 def pft_kmrun_record():
     if request.method == 'POST':
         afpsn = request.form.get('afpsn')

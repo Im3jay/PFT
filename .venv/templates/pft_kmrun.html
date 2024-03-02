@@ -2,6 +2,13 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="{{ url_for('static', filename='logout.js') }}"></script>
+        <script>
+            // JavaScript function to navigate back to the previous page
+            function goBack() {
+                window.history.back();
+            }
+        </script>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +30,8 @@
                 {% if 'proctor_access' in session %}
                 <h4 class="font-h4">by Proctor: {{ session['proctor_access']['name'] }}</h4><br>
                 {% endif %}
-
+                <!-- Back Button -->
+                <input type="button" onclick="goBack()" value="Back">
                 <label>AFPSN:</label>
                 <input type="text" placeholder="Search AFPSN here" name="afpsn" id="afpsn_id" onkeyup="suggestUsernames()" on>
                 <div id="usernameDisplay"></div><br>
