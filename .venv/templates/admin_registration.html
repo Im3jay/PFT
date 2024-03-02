@@ -21,7 +21,8 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn">Register</button>
+            <div style="text-align: center;">
+            <button type="submit" class="btn">Register</button></div>
         </form>
         <p>Already have an account? <a href="{{ url_for('admin_login') }}">Login</a></p>
         <p>Back to <a href="{{ url_for('lobby') }}">Lobby</a></p> <!-- Button to redirect to lobby -->

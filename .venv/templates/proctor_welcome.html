@@ -1,79 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='proctor.css') }}">
-    <title>Proctor Welcome</title>
-</head>
-<body>
-    <!--<div class="topnav"> -->
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cy_test.css') }}">
+        <title>PFT - Welcome Proctor!</title>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="background"> <br> <!-- Start of Wallpaper -->
+
+            <div class="container">
+                <h3>Physical Fitness Test Activity</h3> <br>
+                <h4>Welcome to PFT Proctor:</h4>
+                {% if 'proctor_access' in session %}
+                <h4>{{ session['proctor_access']['name'] }}</h4>
+                {% endif %}
+                <!-- <p><a href="{{ url_for('proctor_registration') }}">Logout</a></p> -->
+                <!-- <a href="{{ url_for('proctor_logout') }}">Logout</a> -->
+            </div>
+
+            <a href="/pft_pushup_record" class="container2">
+                <div class="text">
+                    <h4>Push-up Test</h4>
+                    <p>A test used to measure upper body strength and endurance.</p>
+                </div>
+                <img src="https://e7.pngegg.com/pngimages/610/694/png-clipart-exercise-push-up-physical-fitness-stretching-fitness-centre-man-sport-physical-fitness-sport-thumbnail.png">
+            </a>
+
+            <a href="/pft_situp_record" class="container2">
+                <div class="text">
+                    <h4>Sit-up Test</h4>
+                    <p>A test used to measure abdominal strength and endurance.</p>
+                </div>
+                <img src="https://static.vecteezy.com/system/resources/previews/022/725/854/original/silhouettes-of-people-doing-sport-fitness-gymnastics-gym-sit-up-free-png.png">
+            </a>
+
+            <a href="/pft_kmrun_record" class="container2">
+                <div class="text">
+                    <h4>3:2 KM Run Test</h4>
+                    <p>A test used to measure cardiovascular endurance.</p>
+                </div>
+                <img src="https://w7.pngwing.com/pngs/383/791/png-transparent-running-man-silhouette.png">
+            </a>
+
+        </div> <!-- End of Wallpaper -->
+    </body>
+
+</html>
+
+<!--
     <div class="page-topnav">
-        <a href="#home"> <!-- to lobby -->
+        <a href="#home">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2" style="width: 60px; height: auto;">
         </a>
         <a class="page-font">51st Engineer Brigade, Philippine Army</a>
     </div>
-    <div class="page-container">
-        <div class="left-text">Physical Fitness Test Activity</div>
-        <img src="https://army.mil.ph/home/images/2022/pamu-logo/51st-engi.png" class="right-logo">
-    </div>
-    <div class="container">
-        {% if 'proctor_access' in session %} <!-- The array number beside the session tells which tuple section to use -->
-        <p>Welcome to PFT Proctor: {{ session['proctor_access']['name'] }}!</p>
-        {% endif %}
-    </div>
-    <div class="container1">
-        <div class="box">
-            <div class="content">
-                <div class="text">
-                    <div>
-                        <h2>Push-up Test</h2>
-                        <p>A test used to measure upper body strength and endurance.</p>
-                    </div>
-                </div>
-                <img src="">
-            </div>
-        </div>
-
-        <div class="box">
-            <div class="content">
-                <div class="text">
-                    <div>
-                        <h2>Sit-up Test</h2>
-                        <p>A test used to measure abdominal strength and endurance.</p>
-                    </div>
-                </div>
-                <img src="">
-            </div>
-        </div>
-
-        <div class="box">
-            <div class="content">
-                <div class="text">
-                    <div>
-                        <h2>3:2 KM Run Test</h2>
-                        <p>A test used to measure cardiovascular endurance.</p>
-                    </div>
-                </div>
-                <img src="">
-            </div>
-        </div>
-    </div>
-
-
-
-    <div>
-        <a href="{{ url_for('proctor_logout') }}">Logout</a>
-    </div>
-    
-    
-            <div class="additional-buttons">
-                <form action="/proctor_access" method="get">
-                    <button type="submit" class="btn">Start</button>
-                </form>
-        
-    </div>
-</body>
-</html>
+-->

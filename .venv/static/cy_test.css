@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+body, .background {
+    margin: 0;
+    padding: 0;
+}
+
+.background {
+    background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/05/Incipio-Camo-Wallpaper.jpg');
+    height: 120vh;
+    width: 100vw;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+form {
+    width: 340px;
+    background-color:
+    rgba(255,255,255,0.10);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+form *, .container *, .container2 * {
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+
+*, *:before, *:after{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+h3, .font-h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: rgb(255, 255, 255);
+    text-shadow: rgb(0, 0, 0) 2px -2px 2px;
+    line-height: 42px;
+}
+h4, .font-h4 {
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    text-shadow: rgb(0, 0, 0) 2px -2px 2px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    outline: none;
+    border: none;
+}
+label{
+    display: block;
+    margin-top: 18px;
+    font-size: 16px;
+    font-weight: 500;
+}
+p {
+    color: #ffffff;
+    margin-top: 10px;
+    font-weight: 500;
+    font-size: 12px;
+}
+input, select{
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.12);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 7px;
+    font-size: 16px;
+    font-weight: 300;
+    color: #ffffff;
+}
+::placeholder{
+    color: #e5e5e5;
+}
+button{
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: 55%;
+    background-color: #010101;
+    color: #ffffff;
+    padding: 10px 0;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center;
+}
+
+/* TEST */
+
+.container{
+    width: 340px;
+    background-color:
+    rgba(255,255,255,0.10);
+    position: relative;
+    margin: 20px auto;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.container2{
+    width: 340px;
+    background-color:
+    rgba(255,255,255,0.10);
+    position: relative;
+    margin: 20px auto;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 10px 35px;
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+}
+.container2 img {
+    max-width: 35%;
+    max-height: auto;
+    margin-left: 10px;
+    background-color: transparent;
+    background-blend-mode: lighten;
+}
+.container2 .text {
+    flex: 1;
+}
+option{
+    color: #000000;
+}
+.display {
+font-family: 'Poppins',sans-serif;
+color: #ffffff;
+letter-spacing: 0.5px;
+outline: none;
+border: none;
+margin-top: 7px;
+}

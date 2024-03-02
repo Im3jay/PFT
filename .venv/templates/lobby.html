@@ -11,13 +11,13 @@
         <div class="image"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2"> </div>
         <a href="#home"> 51st Engineer Brigade, Philippine Army</a>
     </div>
-    <div class="container">
-        <h1>Welcome to the Lobby</h1>
-        <p>Click the button below to register:</p>
-        <form action="/registration" method="get">
+    <div class="container" style="text-align: center;">
+        <h1 style="text-align: center;">Welcome to the Lobby</h1>
+        <p style="text-align: center;">Click the button below to register:</p>
+        <form action="/registration" method="get" style="text-align: center;">
             <button type="submit" class="btn">Register</button>
         </form>
-        <div class="additional-buttons">
+        <div class="additional-buttons" style="text-align: center;">
             <a href="{{ url_for('proctor_login') }}" class="btn">Proctor</a>
             <a href="{{ url_for('admin_login') }}" class="btn">Admin</a>
         </div>

@@ -30,13 +30,13 @@ def registration():
         middle_name = request.form['middle_name']
         surname = request.form['surname']
         afpsn = request.form['afpsn']
-        afpos_mos = request.form['afpos_mos']
+        afp_mos = request.form['afp_mos']
         gender = request.form['gender']
         birth_date = request.form['birth_date']
         unit = request.form['unit']
         company = request.form['company']
         cursor = db.cursor()
-        cursor.execute("INSERT INTO users_account (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, birth_date, unit, company) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (rank, first_name, middle_name, surname, afpsn, afpos_mos, gender, birth_date, unit, company))
+        cursor.execute("INSERT INTO users_account (rank, first_name, middle_name, surname, afpsn, afp_mos, gender, birth_date, unit, company) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (rank, first_name, middle_name, surname, afpsn, afp_mos, gender, birth_date, unit, company))
         db.commit()
         cursor.close()
         return redirect(url_for('lobby'))
@@ -99,10 +99,10 @@ def proctor_registration():
         afpsn = request.form['afpsn']
         password = request.form['password']
         rank = request.form['rank']
-        afpos_mos = request.form['afpos_mos']
+        afp_mos = request.form['afp_mos']
 
         cursor = db.cursor()
-        cursor.execute("INSERT INTO proctor_account (name, afpsn, password, rank, afpos_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afpos_mos))
+        cursor.execute("INSERT INTO proctor_account (name, afpsn, password, rank, afp_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afp_mos))
         db.commit()
         cursor.close()
         
@@ -167,11 +167,11 @@ def proctor_access():
 
         # Serial number exists, process the rest of the form data
         raw_pushup = request.form.get('raw_pushup')
-        situp_count = request.form.get('raw_situp')
+        raw_situp = request.form.get('raw_situp')
         act_date = request.form.get('act_date')
         #participant_number = request.form.get('participant_number')
 
-        if not (raw_pushup and situp_count and act_date ): #and participant_number
+        if not (raw_pushup and raw_situp and act_date ): #and participant_number
             return "Push-up count, sit-up count, date, or participant number is missing."
 
         try:
@@ -403,58 +403,364 @@ def view_data():
     cursor.close()
     return jsonify({"users_account": user_data, "proctors": proctor_data})
 
-# Route for Run Page
-@app.route('/pft_kmrun')
-def pft_kmrun():
-    return render_template('pft_kmrun.html')
+# # Route for Run Page
+# @app.route('/pft_kmrun')
+# def pft_kmrun():
+#     return render_template('pft_kmrun.html')
 
-# Route for Pushup Page
-@app.route('/pft_pushup')
-def pft_pushup():
-    return render_template('pft_pushup.html')
+# # Route for Pushup Page
+# @app.route('/pft_pushup')
+# def pft_pushup():
+#     return render_template('pft_pushup.html')
 
-# Route for Situp Page
-@app.route('/pft_situp')
-def pft_situp():
+# # Route for Situp Page
+# @app.route('/pft_situp')
+# def pft_situp():
+#     return render_template('pft_situp.html')
+
+
+# @app.route('/record_pushup', methods=['POST'])
+# def record_pushup():
+#     if request.method == 'POST':
+#         pushup_reps = request.form['pushup_reps']
+        
+#         cursor = db.cursor()
+#         cursor.execute("INSERT INTO pft_pushup_results (reps) VALUES (%s)", (pushup_reps,))
+#         db.commit()
+#         cursor.close()
+        
+#         return redirect(url_for('proctor_access'))
+
+# @app.route('/record_situp', methods=['POST'])
+# def record_situp():
+#     if request.method == 'POST':
+#         situp_reps = request.form['situp_reps']
+        
+#         cursor = db.cursor()
+#         cursor.execute("INSERT INTO pft_situp_results (reps) VALUES (%s)", (situp_reps,))
+#         db.commit()
+#         cursor.close()
+        
+#         return redirect(url_for('proctor_access'))
+
+# @app.route('/record_kmrun', methods=['POST'])
+# def record_kmrun():
+#     if request.method == 'POST':
+#         km_run = request.form['km_run']
+        
+#         cursor = db.cursor()
+#         cursor.execute("INSERT INTO pft_kmrun_results (distance) VALUES (%s)", (km_run,))
+#         db.commit()
+#         cursor.close()
+        
+#         return redirect(url_for('proctor_access'))
+
+@app.route('/pft_situp_record', methods=['GET', 'POST'])
+def pft_situp_record():
+    if request.method == 'POST':
+        afpsn = request.form.get('afpsn')
+
+        # Check if serial number exists
+        cursor = db.cursor()
+        cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,))
+        first_name = cursor.fetchone()
+
+        if not first_name:
+            return "Serial number does not exist."
+
+        # Serial number exists, process the rest of the form data
+        raw_situp = request.form.get('raw_situp')
+        act_date = request.form.get('act_date')
+        #participant_number = request.form.get('participant_number')
+
+        if not (raw_situp and act_date ): #and participant_number
+            return "Sit-up count, date, or participant number is missing."
+
+        try:
+            act_date = datetime.strptime(act_date, '%Y-%m-%d').date()
+        except ValueError:
+            # Handle parsing error
+            return "Error: Invalid date format"
+    
+
+        # Process sit-up data
+        cursor.execute("SELECT * FROM pft_situp WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
+        existing_raw_situp = cursor.fetchone()
+
+        if existing_raw_situp:
+            print("Situp data already submitted for this act_date.")
+        else:
+            # Define the switch dictionary for male participants
+            switch_male = {
+                (21, 21): "age21_male",
+                (22, 26): "age22_26_male",
+                (27, 31): "age27_31_male",
+                (32, 36): "age32_36_male",
+                (37, 41): "age37_41_male",
+                (42, 46): "age42_46_male",
+                (47, 51): "age47_51_male",
+                (52, 56): "age52_56_male",
+                (57, 61): "age57_61_male",
+                (62, float('inf')): "age62_male"
+            }
+
+            # Define the switch dictionary for female participants
+            switch_female = {
+                (21, 21): "age21_female",
+                (22, 26): "age22_26_female",
+                (27, 31): "age27_31_female",
+                (32, 36): "age32_36_female",
+                (37, 41): "age37_41_female",
+                (42, 46): "age42_46_female",
+                (47, 51): "age47_51_female",
+                (52, 56): "age52_56_female",
+                (57, 61): "age57_61_female",
+                (62, float('inf')): "age62_female"
+            }
+
+            def execute_query(cursor, table_name, raw_situp, afpsn, act_date):
+                query = f"SELECT {table_name} FROM `situp_reference` WHERE repetitions = %s;"
+                cursor.execute(query, (raw_situp,))
+                participant_score = cursor.fetchone()[0]
+                insert_query = f"INSERT INTO pft_situp (afpsn, act_date, raw_situp, situp) VALUES (%s, %s, %s, %s)"
+                cursor.execute(insert_query, (afpsn, act_date, raw_situp, participant_score))
+                db.commit()  # Commit the changes to the database
+
+                update_query = """
+                    UPDATE pft_summary
+                    SET raw_situp=%s, situp = %s
+                    WHERE afpsn = %s AND act_date=%s
+                """
+                cursor.execute(update_query, (raw_situp, participant_score, afpsn,act_date))
+                db.commit()
+
+            def process_participant(cursor, afpsn, act_date):
+                # Get participant's age
+                cursor.execute("SELECT DATEDIFF(CURDATE(), birth_date) DIV 365 FROM users_account WHERE afpsn = %s", (afpsn,))
+                participant_age = cursor.fetchone()[0]
+
+                # Get participant's gender
+                cursor.execute("SELECT gender FROM `users_account` WHERE afpsn = %s;", (afpsn,))
+                participant_gender = cursor.fetchone()[0]
+
+                if participant_gender == "M":
+                    switch = switch_male
+                else:
+                    switch = switch_female
+
+                for age_range, table_name in switch.items():
+                    if age_range[0] <= participant_age <= age_range[1]:
+                        print(f"Participant is {age_range[0]} - {age_range[1]}")
+                        execute_query(cursor, table_name, raw_situp, afpsn, act_date)
+                        break
+
+            process_participant(cursor, afpsn, act_date)
+
+        return "Data submitted successfully."
+
     return render_template('pft_situp.html')
 
+@app.route('/check_existing_situp_data', methods=['GET'])
+def check_existing_situp_data():
+    afpsn = request.args.get('afpsn')
 
-@app.route('/record_pushup', methods=['POST'])
-def record_pushup():
+    # Check if data exists for today's date for the specified afpsn
+    cursor = db.cursor()
+    today_date = datetime.now().date()
+    cursor.execute("SELECT * FROM pft_situp WHERE afpsn = %s AND act_date = %s", (afpsn, today_date))
+    existing_data = cursor.fetchone()
+
+    if existing_data:
+        return jsonify(True)  # Data exists
+    else:
+        return jsonify(False)  # No data found
+
+######
+
+@app.route('/pft_pushup_record', methods=['GET', 'POST'])
+def pft_pushup_record():
     if request.method == 'POST':
-        pushup_reps = request.form['pushup_reps']
-        
-        cursor = db.cursor()
-        cursor.execute("INSERT INTO pft_pushup_results (reps) VALUES (%s)", (pushup_reps,))
-        db.commit()
-        cursor.close()
-        
-        return redirect(url_for('proctor_access'))
+        afpsn = request.form.get('afpsn')
 
-@app.route('/record_situp', methods=['POST'])
-def record_situp():
+        # Check if serial number exists
+        cursor = db.cursor()
+        cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,))
+        first_name = cursor.fetchone()
+
+        if not first_name:
+            return "Serial number does not exist."
+
+        # Serial number exists, process the rest of the form data
+        raw_pushup = request.form.get('raw_pushup')
+        act_date = request.form.get('act_date')
+        #participant_number = request.form.get('participant_number')
+
+        if not (raw_pushup and act_date ): #and participant_number
+            return "Push-up count, date, or participant number is missing."
+
+        try:
+            act_date = datetime.strptime(act_date, '%Y-%m-%d').date()
+        except ValueError:
+            # Handle parsing error
+            return "Error: Invalid date format"
+        
+        cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
+        existing_raw_pushup = cursor.fetchone()
+
+        if existing_raw_pushup:
+            print("Pushup data already submitted for this act_date.")
+        else:
+            # Define the switch dictionary for male participants
+            switch_male = {
+                (21, 21): "age21_male",
+                (22, 26): "age22_26_male",
+                (27, 31): "age27_31_male",
+                (32, 36): "age32_36_male",
+                (37, 41): "age37_41_male",
+                (42, 46): "age42_46_male",
+                (47, 51): "age47_51_male",
+                (52, 56): "age52_56_male",
+                (57, 61): "age57_61_male",
+                (62, float('inf')): "age62_male"
+            }
+
+            # Define the switch dictionary for female participants
+            switch_female = {
+                (21, 21): "age21_female",
+                (22, 26): "age22_26_female",
+                (27, 31): "age27_31_female",
+                (32, 36): "age32_36_female",
+                (37, 41): "age37_41_female",
+                (42, 46): "age42_46_female",
+                (47, 51): "age47_51_female",
+                (52, 56): "age52_56_female",
+                (57, 61): "age57_61_female",
+                (62, float('inf')): "age62_female"
+            }
+
+            def execute_query(cursor, table_name, raw_pushup, afpsn, act_date):
+                query = f"SELECT {table_name} FROM `pushup_reference` WHERE repetitions = %s;"
+                cursor.execute(query, (raw_pushup,))
+                participant_score = cursor.fetchone()[0]
+                insert_query = f"INSERT INTO pft_pushup (afpsn, act_date, raw_pushup, pushup) VALUES (%s, %s, %s, %s)"
+                cursor.execute(insert_query, (afpsn, act_date, raw_pushup, participant_score))
+                db.commit()  
+
+                # Summary table insert data
+                cursor.execute("SELECT rank, first_name, middle_name, surname, afpsn, afp_mos, gender, unit FROM users_account WHERE afpsn = %s", (afpsn,))
+                user_data = cursor.fetchone()
+                # Insert data into pft_summary table
+                summary_query = "INSERT INTO pft_summary (rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, raw_pushup, pushup, situp, kmrun, unit, act_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(summary_query, (user_data[0], user_data[1], user_data[2], user_data[3], user_data[4], user_data[5], user_data[6], raw_pushup, participant_score, 0, 0,user_data[7], act_date))
+                db.commit() 
+
+            def process_participant(cursor, afpsn, act_date):
+                # Get participant's age
+                cursor.execute("SELECT DATEDIFF(CURDATE(), birth_date) DIV 365 FROM users_account WHERE afpsn = %s", (afpsn,))
+                participant_age = cursor.fetchone()[0]
+
+                # Get participant's gender
+                cursor.execute("SELECT gender FROM `users_account` WHERE afpsn = %s;", (afpsn,))
+                participant_gender = cursor.fetchone()[0]
+
+                if participant_gender == "M":
+                    switch = switch_male
+                else:
+                    switch = switch_female
+
+                for age_range, table_name in switch.items():
+                    if age_range[0] <= participant_age <= age_range[1]:
+                        print(f"Participant is {age_range[0]} - {age_range[1]}")
+                        execute_query(cursor, table_name, raw_pushup, afpsn, act_date)
+                        break
+
+            process_participant(cursor, afpsn, act_date)
+
+        return "Data submitted successfully."
+        
+    return render_template('pft_pushup.html')
+
+@app.route('/check_existing_pushup_data', methods=['GET'])
+def check_existing_pushup_data():
+    afpsn = request.args.get('afpsn')
+
+    # Check if data exists for today's date for the specified afpsn
+    cursor = db.cursor()
+    today_date = datetime.now().date()
+    cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s AND act_date = %s", (afpsn, today_date))
+    existing_data = cursor.fetchone()
+
+    if existing_data:
+        return jsonify(True)  # Data exists
+    else:
+        return jsonify(False)  # No data found
+
+######
+
+@app.route('/pft_kmrun_record', methods=['GET', 'POST'])
+def pft_kmrun_record():
     if request.method == 'POST':
-        situp_reps = request.form['situp_reps']
-        
-        cursor = db.cursor()
-        cursor.execute("INSERT INTO pft_situp_results (reps) VALUES (%s)", (situp_reps,))
-        db.commit()
-        cursor.close()
-        
-        return redirect(url_for('proctor_access'))
+        afpsn = request.form.get('afpsn')
 
-@app.route('/record_kmrun', methods=['POST'])
-def record_kmrun():
-    if request.method == 'POST':
-        km_run = request.form['km_run']
-        
+        # Check if serial number exists
         cursor = db.cursor()
-        cursor.execute("INSERT INTO pft_kmrun_results (distance) VALUES (%s)", (km_run,))
-        db.commit()
-        cursor.close()
-        
-        return redirect(url_for('proctor_access'))
+        cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,))
+        first_name = cursor.fetchone()
 
+        if not first_name:
+            return "Serial number does not exist."
+
+        # Serial number exists, process the rest of the form data
+        raw_kmrun = request.form.get('raw_kmrun')
+        act_date = request.form.get('act_date')
+        #participant_number = request.form.get('participant_number')
+
+        if not (raw_kmrun and act_date ): #and participant_number
+            return "KM run count, date, or participant number is missing."
+
+        try:
+            act_date = datetime.strptime(act_date, '%Y-%m-%d').date()
+        except ValueError:
+            # Handle parsing error
+            return "Error: Invalid date format"
+        
+        cursor.execute("SELECT * FROM pft_kmrun WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
+        existing_raw_kmrun = cursor.fetchone()
+
+        if existing_raw_kmrun:
+            print("KM run data already submitted for this act_date.")
+        else:
+             cursor.execute("INSERT INTO pft_kmrun (afpsn,raw_kmrun,act_date) VALUES (%s, %s,%s)",
+                           (afpsn, raw_kmrun,act_date, ))
+             db.commit()  
+
+             update_query = """
+                    UPDATE pft_summary
+                    SET kmrun = %s
+                    WHERE afpsn = %s AND act_date=%s
+                """
+             cursor.execute(update_query, ( raw_kmrun, afpsn,act_date))
+             db.commit()
+
+        return "Data submitted successfully."
+
+    return render_template('pft_kmrun.html')
+
+@app.route('/check_existing_kmrun_data', methods=['GET'])
+def check_existing_kmrun_data():
+    afpsn = request.args.get('afpsn')
+
+    # Check if data exists for today's date for the specified afpsn
+    cursor = db.cursor()
+    today_date = datetime.now().date()
+    cursor.execute("SELECT * FROM pft_kmrun WHERE afpsn = %s AND act_date = %s", (afpsn, today_date))
+    existing_data = cursor.fetchone()
+
+    if existing_data:
+        return jsonify(True)  # Data exists
+    else:
+        return jsonify(False)  # No data found
+######
 
 if __name__ == '__main__':
     app.run(debug=True)
