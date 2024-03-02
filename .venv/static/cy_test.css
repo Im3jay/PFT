@@ -7,14 +7,14 @@ body, .background {
 
 .background {
     background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/05/Incipio-Camo-Wallpaper.jpg');
-    height: 100vh;
+    height: 120vh;
     width: 100vw;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
-form{
+form {
     width: 340px;
     background-color:
     rgba(255,255,255,0.10);
@@ -32,7 +32,7 @@ form{
     flex-direction: column;
     justify-content: center;
 }
-form *, .container *, .container2 *{
+form *, .container *, .container2 * {
     font-family: 'Poppins',sans-serif;
     color: #ffffff;
     letter-spacing: 0.5px;
@@ -45,7 +45,7 @@ form *, .container *, .container2 *{
     margin: 0;
     box-sizing: border-box;
 }
-h3 {
+h3, .font-h3 {
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
     text-align: center;
@@ -55,7 +55,7 @@ h3 {
     text-shadow: rgb(0, 0, 0) 2px -2px 2px;
     line-height: 42px;
 }
-h4 {
+h4, .font-h4 {
     font-family: 'Poppins',sans-serif;
     color: #ffffff;
     text-shadow: rgb(0, 0, 0) 2px -2px 2px;
@@ -76,7 +76,7 @@ p {
     font-weight: 500;
     font-size: 12px;
 }
-input{
+input, select{
     display: block;
     height: 50px;
     width: 100%;
@@ -149,4 +149,15 @@ button{
 }
 .container2 .text {
     flex: 1;
+}
+option{
+    color: #000000;
+}
+.display {
+font-family: 'Poppins',sans-serif;
+color: #ffffff;
+letter-spacing: 0.5px;
+outline: none;
+border: none;
+margin-top: 7px;
 }
