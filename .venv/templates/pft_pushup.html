@@ -12,7 +12,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='cy_test.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='pft_pushup.css') }}">
         <title>PFT - Record Push up</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -21,16 +21,16 @@
     </head>
 
     <body>
-        <div class="background"> <br> <!-- Start of Wallpaper --> 
+        
+        <div class="background"> <br><br><br> <!-- Start of Wallpaper --> 
+        
             <form action="/pft_pushup_record" method="post">
-                <br><br>
-                <h3 class="font-h3">Physical Fitness Test</h3> <br>
-                <h4 class="font-h4">Push-up Activity</h4>
+                <h3 class="font-h3">Push-up Activity</h3> <br>
+                
                 {% if 'proctor_access' in session %}
-                <h4 class="font-h4">by Proctor: {{ session['proctor_access']['name'] }}</h4><br>
+                <h4 class="font-h4">Proctor: {{ session['proctor_access']['name'] }}</h4><br>
                 {% endif %}
-                <!-- Back Button -->
-                <input type="button" onclick="goBack()" value="Back">
+                
                 <label>AFPSN:</label>
                 <input type="text" placeholder="Search AFPSN here" name="afpsn" id="afpsn_id" onkeyup="suggestUsernames()" on>
                 <div class="display" id="usernameDisplay"></div>
@@ -47,9 +47,11 @@
                 <input type="text" placeholder="Enter participant no. here" name="participant_number" id="participantNumber" disabled><br>
                 
                 <input type="submit" value="Submit" id="submitButton" disabled>
+                <!-- Back Button -->
+                <input type="button" onclick="goBack()" value="Back">
             </form>
         </div> <!-- End of Wallpaper -->
-
+   
 
         <!-- LOGIC -->
         <script>

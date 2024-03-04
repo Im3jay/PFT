@@ -63,6 +63,7 @@ h4, .font-h4 {
     text-align: center;
     outline: none;
     border: none;
+    font-size: 18px;
 }
 label{
     display: block;
@@ -160,4 +161,11 @@ letter-spacing: 0.5px;
 outline: none;
 border: none;
 margin-top: 7px;
+}
+
+.logout-button{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  
 }

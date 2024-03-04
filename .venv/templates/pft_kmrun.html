@@ -12,7 +12,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='cy_test.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='pft_kmrun.css') }}">
         <title>PFT - Record KM Run</title>
 
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -25,13 +25,11 @@
 
             <form action="/pft_kmrun_record" method="post">
                 <br><br>
-                <h3 class="font-h3">Physical Fitness Test</h3> <br>
-                <h4 class="font-h4">3:2 KM Run Activity</h4>
+                <h3 class="font-h3">3:2 KM Run Activity</h3> <br>
                 {% if 'proctor_access' in session %}
-                <h4 class="font-h4">by Proctor: {{ session['proctor_access']['name'] }}</h4><br>
+                <h4 class="font-h4">Proctor: {{ session['proctor_access']['name'] }}</h4><br>
                 {% endif %}
-                <!-- Back Button -->
-                <input type="button" onclick="goBack()" value="Back">
+            
                 <label>AFPSN:</label>
                 <input type="text" placeholder="Search AFPSN here" name="afpsn" id="afpsn_id" onkeyup="suggestUsernames()" on>
                 <div id="usernameDisplay"></div><br>
@@ -49,6 +47,7 @@
                 <input type="text" placeholder="Enter participant no. here" name="participant_number" id="participantNumber" disabled><br>
                 
                 <input type="submit" value="Submit" id="submitButton" disabled>
+                    <input type="button" onclick="goBack()" value="Back">
             </form>
         </div> <!-- End of Wallpaper -->
 
