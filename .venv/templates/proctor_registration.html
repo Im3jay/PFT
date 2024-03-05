@@ -14,9 +14,10 @@
     
     <body>
         <div class="background"> <!-- Start of Wallpaper -->
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png" >
+            
+
             <form action="/proctor_registration" method="post"> <!-- Login Form -->
-                <br><br><br><br><br><br>
+                <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
                 <h3>PFT Proctor</h3>
                 <h4>REGISTRATION</h4>
 
@@ -56,7 +57,7 @@
                 <label for="password">Password:</label>
                 <input  type="password" placeholder="Enter your password here" id="password" name="password" required>
 
-                <button>Login</button>
+                <button>Register</button>
 
                 <p>Already have an account? <a href="{{ url_for('proctor_login') }}">Login</a></p>
                 <p>Back to <a href="{{ url_for('lobby') }}">Lobby</a></p>

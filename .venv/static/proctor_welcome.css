@@ -7,7 +7,7 @@ body, .background {
 
 .background {
     background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/05/Incipio-Camo-Wallpaper.jpg');
-    height: 120vh;
+    height: 150vh;
     width: 100vw;
     background-position: center;
     background-size: cover;
@@ -20,7 +20,7 @@ form {
     rgba(255,255,255,0.10);
     position: absolute;
     transform: translate(-50%,-50%);
-    top: 50%;
+    top: 70vh;
     left: 50%;
     border-radius: 10px;
     backdrop-filter: blur(10px);
@@ -122,6 +122,7 @@ button{
     flex-direction: column;
     justify-content: center;
     margin-top: 20px;
+   
 }
 
 .container2{
@@ -168,4 +169,12 @@ margin-top: 7px;
     display: flex;
     justify-content: center;
   
+}
+
+.logo1{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-bottom: 7%;
 }

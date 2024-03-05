@@ -94,7 +94,7 @@ input, select{
 button{
     margin-top: 20px;
     margin-bottom: 5px;
-    width: 55%;
+    width: 50%;
     background-color: #010101;
     color: #ffffff;
     padding: 10px 0;
@@ -167,4 +167,12 @@ margin-top: 7px;
     margin-top: auto;
     margin-left: auto;
     margin-right:auto;
+}
+
+.logo1{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-bottom: 7%;
 }

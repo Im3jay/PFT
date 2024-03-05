@@ -24,7 +24,8 @@
         <div class="background"> <br> <!-- Start of Wallpaper -->
 
             <form action="/pft_kmrun_record" method="post">
-                <br><br>
+                <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
+
                 <h3 class="font-h3">3:2 KM Run Activity</h3> <br>
                 {% if 'proctor_access' in session %}
                 <h4 class="font-h4">Proctor: {{ session['proctor_access']['name'] }}</h4><br>
@@ -46,8 +47,8 @@
                 <label>Participant No.:</label>
                 <input type="text" placeholder="Enter participant no. here" name="participant_number" id="participantNumber" disabled><br>
                 
-                <input type="submit" value="Submit" id="submitButton" disabled>
-                    <input type="button" onclick="goBack()" value="Back">
+                <input class="btn1" type="submit" value="Submit" id="submitButton" disabled>
+                <input class="btn1" type="button" onclick="goBack()" value="Back">
             </form>
         </div> <!-- End of Wallpaper -->
 

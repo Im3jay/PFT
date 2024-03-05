@@ -25,6 +25,8 @@
         <div class="background"> <br><br><br> <!-- Start of Wallpaper --> 
         
             <form action="/pft_pushup_record" method="post">
+                <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
+
                 <h3 class="font-h3">Push-up Activity</h3> <br>
                 
                 {% if 'proctor_access' in session %}
@@ -46,9 +48,9 @@
                 <label>Participant No.:</label>
                 <input type="text" placeholder="Enter participant no. here" name="participant_number" id="participantNumber" disabled><br>
                 
-                <input type="submit" value="Submit" id="submitButton" disabled>
+                <input class="btn1" type="submit" value="Submit" id="submitButton" disabled>
                 <!-- Back Button -->
-                <input type="button" onclick="goBack()" value="Back">
+                <input class="btn1" type="button" onclick="goBack()" value="Back">
             </form>
         </div> <!-- End of Wallpaper -->
    

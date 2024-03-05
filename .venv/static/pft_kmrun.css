@@ -162,3 +162,24 @@ border: none;
 margin-top: 7px;
 }
 
+.btn1{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 70%;
+    background-color: #010101;
+    color: #ffffff;
+    padding: 10px 0;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center;
+    
+}
+
+.logo1{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-bottom: 7%;
+}
