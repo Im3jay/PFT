@@ -1,52 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Access</title>
+    <title>51st</title>
+    <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
+
 <body>
-    <div class="topnav">
-        <a href="#home"> 51st Engineer Brigade, Philippine Army</a>
-    </div>
-    <div class="container">
-        <h1>Admin Access</h1>
-        <div id="data-container"></div> <!-- Container to display database content -->
-        <button onclick="viewData()">View Data</button>
-        <button onclick="addData()">Add Data</button>
-        <button onclick="editData()">Edit Data</button>
-        <button onclick="deleteData()">Delete Data</button>
-    </div>
+    <!-- =============== Navigation ================ -->
+    <div class="admin_container">
+        <div class="admin_navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="person-outline"></ion-icon>
+                        </span>
+                        <span class="title">ADMINISTRATOR</span>
+                    </a>
+                </li>
 
-    <script>
-        function viewData() {
-            // Make AJAX request to fetch data from the server
-            $.ajax({
-                url: '/view_data',
-                method: 'GET',
-                success: function(response) {
-                    // Display data in the container
-                    $('#data-container').html(response);
-                },
-                error: function(error) {
-                    console.error('Error fetching data:', error);
-                }
-            });
-        }
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Home</span>
+                    </a>
+                </li>
 
-        function addData() {
-            // Implement logic for adding data
-        }
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Participants</span>
+                    </a>
+                </li>
 
-        function editData() {
-            // Implement logic for editing data
-        }
 
-        function deleteData() {
-            // Implement logic for deleting data
-        }
-    </script>
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Settings</span>
+                    </a>
+                </li>
+
+             
+
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="admin_main">
+            <div class="admin_topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="admin_search">
+                    <label>
+                        <input type="text" placeholder="Search">
+                        <!-- <ion-icon name="search-outline"></ion-icon> -->
+                    </label>
+                </div>
+            </div>
+
+            <!-- ======================= Cards ================== -->
+            <div class="admin_cardBox">
+                <div class="card">
+                    <div>
+                        <div class="numbers">Account Approval</div>
+                        <div class="cardName">Proctor Registration Account Approval</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="key-outline"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers">PFT Results</div>
+                        <div class="cardName">Preview of the overall result of the parrticipants</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="footsteps-outline"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers">Participants Registration</div>
+                        <div class="cardName">Preview of Participants Registration </div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="reader-outline"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers">Developers</div>
+                        <div class="cardName">The developers of the system</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="construct-outline"></ion-icon>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================ Order Details List ================= -->
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Excercise Results</h2>
+                        <a href="#" class="btn">View All</a>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>AFPSN</td>
+                                <td>Pushup</td>
+                                <td>Situp Result</td>
+                                <td>Kilometer Run Result</td>
+                                <td>Overall Result</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Daniel Mark Florencio</td>
+                                <td>208778</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td><span class="status failed">Failed</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>Shane Nicole Noprada</td>
+                                <td>210215</td>
+                                <td>69</td>
+                                <td>69</td>
+                                <td>69</td>
+                                <td><span class="status passed">Passed</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>Aarone John Revilla</td>
+                                <td>210245</td>
+                                <td>29</td>
+                                <td>29</td>
+                                <td>9</td>
+                                <td><span class="status failed">Passed</span></td>
+                            </tr>
+
+                          
+                        </tbody>
+                    </table>
+                </div>
+
+             
+    <!-- =========== Scripts =========  -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
+
 </html>
