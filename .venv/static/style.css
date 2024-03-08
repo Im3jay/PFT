@@ -18,7 +18,7 @@
 .proctor-button,
 .admin-button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #32620E;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -37,7 +37,7 @@
 
 .btn_participant{
     text-align: center;
-    background-color: #007bff;
+    background-color: #32620E;
     align-items: center;
 }
 

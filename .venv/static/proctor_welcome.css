@@ -166,9 +166,13 @@ margin-top: 7px;
 
 .logout-button{
     align-items: center;
-    display: flex;
     justify-content: center;
-  
+    text-align: center;
+    width: 80%;
+    font-size: 90%;
+    font-family: 'Poppins',sans-serif;
+    
+   
 }
 
 .logo1{

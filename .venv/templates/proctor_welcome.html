@@ -51,10 +51,12 @@
                 </div>
                 <img src="https://cdn-icons-png.flaticon.com/256/6266/6266049.png">
             </a>
+            <div style="text-align: center;">
+            <button class="logout-button" type="button" onclick="document.getElementById('logoutForm').submit();">Logout</button></div>
+            <form id="logoutForm" action="{{ url_for('proctor_logout') }}" method="post" style="display: none;">
+                <input type="hidden" name="_method" value="POST">
+            </form>
             
-            <a class="logout-link" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
-                <form id="logoutForm" action="{{ url_for('proctor_logout') }}" method="post" style="display: none;">
-                    <input type="hidden" name="_method" value="POST">
         </div> <!-- End of Wallpaper -->
     </body>
 
