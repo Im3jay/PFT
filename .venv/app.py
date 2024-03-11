@@ -387,6 +387,26 @@ def admin_login():
 def admin_access():
     return render_template('admin_access.html')
 
+@app.route('/admin_approval')
+# @require_session(['admin_access'])
+def admin_approval():
+    return render_template('admin_approval.html')
+
+@app.route('/admin_participants')
+# @require_session(['admin_access'])
+def admin_participants():
+    return render_template('admin_participants.html')
+
+@app.route('/admin_pftresults')
+# @require_session(['admin_access'])
+def admin_pftresults():
+    return render_template('admin_pftresults.html')
+
+@app.route('/admin_developers')
+# @require_session(['admin_access'])
+def admin_developers():
+    return render_template('admin_developers.html')
+
 @app.route('/proctor_welcome')
 @require_session(['proctor_access'])
 def proctor_welcome():
