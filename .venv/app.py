@@ -32,6 +32,17 @@ def require_session(session_keys):
         return decorated_function
     return decorator
 
+def require_admin_session(route_names):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'admin_access' not in session:
+                # Redirect to admin login if admin session not found
+                return redirect(url_for('admin_login'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
 # Route for lobby page
 @app.route('/')
 def lobby():
@@ -341,8 +352,6 @@ def proctor_access():
 
     return render_template('proctor_access.html')
 
-
-
 # Route for Admin registration page
 @app.route('/admin_registration', methods=['GET', 'POST'])
 def admin_registration():
@@ -360,6 +369,28 @@ def admin_registration():
     else:
         return render_template('admin_registration.html')
 
+# # Route for Admin Login Page
+# @app.route('/admin_login', methods=['GET', 'POST'])
+# def admin_login():
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
+        
+#         cursor = db.cursor()
+#         cursor.execute("SELECT * FROM admin_credentials WHERE username = %s AND password = %s", (username, password))
+#         admin = cursor.fetchone()
+#         cursor.close()
+        
+#         if admin:
+#             # Store admin information in session
+#             session['admin'] = admin
+#             # Redirect to admin_access.html
+#             return redirect(url_for('admin_access'))
+#         else:
+#             # Redirect to admin_login.html with error message
+#             return render_template('admin_login.html', error="Invalid username or password. Please try again.")
+#     return render_template('admin_login.html')
+
 # Route for Admin Login Page
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
@@ -369,41 +400,58 @@ def admin_login():
         
         cursor = db.cursor()
         cursor.execute("SELECT * FROM admin_credentials WHERE username = %s AND password = %s", (username, password))
-        admin = cursor.fetchone()
+        admin_account = cursor.fetchone()
         cursor.close()
-        
-        if admin:
+
+        if admin_account:
+            admin_id = admin_account[0]  # Assuming the first element is the ID
+            admin_name = admin_account[1]  # Assuming the second element is the name
+
+            if admin_id in active_sessions.values():
+                return render_template('admin_login.html', error="Another session is already active for this account.")
+            
+            # Clear existing sessions for this user (in case of multiple logins)
+            clear_sessions_for_user(admin_id)
+
             # Store admin information in session
-            session['admin'] = admin
+            session['admin_access'] = {'id': admin_id, 'name': admin_name}
+            # Generate a unique session identifier using UUID
+            session_id = str(uuid.uuid4())
+            # Add session ID to active sessions
+            active_sessions[session_id] = admin_id
+            # Store session ID in session cookie
+            session['session_id'] = session_id
             # Redirect to admin_access.html
             return redirect(url_for('admin_access'))
         else:
             # Redirect to admin_login.html with error message
-            return render_template('admin_login.html', error="Invalid username or password. Please try again.")
+            return render_template('admin_login.html', error="Invalid Username or password. Please try again.")
     return render_template('admin_login.html')
 
-# Route for Admin access page
+# Route for Admin Access Page
 @app.route('/admin_access')
+@require_admin_session(['admin_access'])
 def admin_access():
     return render_template('admin_access.html')
 
+# Routes for Admin-specific pages
 @app.route('/admin_approval')
-# @require_session(['admin_access'])
+# @require_admin_session(['admin_access'])
 def admin_approval():
     return render_template('admin_approval.html')
 
 @app.route('/admin_participants')
-# @require_session(['admin_access'])
+# @require_admin_session(['admin_access'])
 def admin_participants():
     return render_template('admin_participants.html')
 
 @app.route('/admin_pftresults')
-# @require_session(['admin_access'])
+# @require_admin_session(['admin_access'])
 def admin_pftresults():
     return render_template('admin_pftresults.html')
 
 @app.route('/admin_developers')
-# @require_session(['admin_access'])
+# @require_admin_session(['admin_access'])
 def admin_developers():
     return render_template('admin_developers.html')
 
