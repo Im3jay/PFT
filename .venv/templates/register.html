@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="topnav">
-        <a href="#home"> 51st Engineer Brigade, Philippine Army</a>
-    </div>
-    <div class="container">
-        <h1>Registration Form</h1>
+    <div class="background">
+        
         <form action="/registration" method="POST">
-            <div class="form-group">
+            <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
+
+            <h3>Registration Form</h3>
                 <label for="rank">Rank:</label>
                 <select id="rank" name="rank" required>
                     <option selected disabled>-- SELECT RANK --</option>
@@ -37,39 +39,39 @@
                     <option value="LTGEN">LTGEN</option>
                     <option value="GEN">GEN</option>
                 </select>
-            </div>
-            <div class="form-group">
+           
+           
                 <label for="first_name">First Name:</label>
                 <input type="text" id="first_name" name="first_name" required>
-            </div>
-            <div class="form-group">
+         
+            
                 <label for="middle_name">Middle Name:</label>
                 <input type="text" id="middle_name" name="middle_name">
-            </div>
-            <div class="form-group">
+            
+            
                 <label for="surname">Surname:</label>
                 <input type="text" id="surname" name="surname" required>
-            </div>
-            <div class="form-group">
+          
+           
                 <label for="afpsn">AFPSN:</label>
                 <input type="text" id="afpsn" pattern="\d{6}" maxlength="6" name="afpsn" required>
-            </div>
-            <div class="form-group">
+            
+           
                 <label for="afp_mos">AFP_MOS:</label>
                 <input type="text" id="afp_mos" name="afp_mos" required>
-            </div>
-            <div class="form-group">
+         
+            
                 <label for="gender">Gender:</label>
                 <select id="gender" name="gender" required>
                     <option value="M">Male</option>
                     <option value="F">Female</option>
                 </select>
-            </div>
-            <div class="form-group">
+           
+            
                 <label for="birth_date">Birthdate:</label>
                 <input type="date" id="birth_date" name="birth_date" required>
-            </div>
-            <div class="form-group">
+           
+            
                 <label for="unit">Unit:</label>
                 <select id="unit" name="unit" required>
                     <option selected disabled>-- SELECT UNIT --</option>
@@ -83,8 +85,8 @@
                     <option value="564ECB">564ECB</option>
                     <option value="565ECB">565ECB</option>
                 </select>
-            </div>
-            <div class="form-group">
+         
+           
                 <label for="company">Company:</label>
                 <select id="company" name="company" required>
                     <option selected disabled>-- SELECT COMPANY --</option>
@@ -94,12 +96,13 @@
                     <option value="CHARLIE COY">CHARLIE COY</option>
                     <option value="DELTA COY">DELTA COY</option>
                 </select>
-            </div>
-            <button type="submit" class="btn" style="text-align: center;">Register</button></div>
+            
+            <button type="submit" class="btn" style="text-align: center;">Register</button>
 
-        </form>
+     
         <div style="text-align: center;">
         <p class="already-registered" >Already registered? <a href="{{ url_for('lobby') }}">Go to Lobby</a></p>
     </div>
+</div>
 </body>
 </html>

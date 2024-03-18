@@ -17,6 +17,7 @@
         <form action="/admin_login" method="post">
             <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
             <h3>Admin Login</h3>
+            <h4>LOGIN YOUR ACCOUNT</h4>
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
           
@@ -29,7 +30,6 @@
        
         <p>Don't have an account? <a href="{{ url_for('admin_registration') }}">Register</a></p>
         <p>Back to <a href="{{ url_for('lobby') }}">Lobby</a></p>
-        <p>TRY <a href="{{ url_for('admin_access') }}">here</a></p>
     </form>
    
 </div>

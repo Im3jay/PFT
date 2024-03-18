@@ -145,11 +145,8 @@ table th {
 }
 
 h1 {
-    margin-bottom: 10px;
-    text-align: center;
-    color: #000000;
-    /* width: 80%; */
-    font-size: 200%;
+  text-align: left;
+  margin-left: auto;
 }
 
 p{
@@ -168,27 +165,42 @@ select{
 }
 
 .topnav {
-    overflow: hidden;
-    background-color: #32620E;
-    max-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  color: white;
+  overflow: hidden;
+  background-color: #32620E;
+  max-width: 150%;
 }
   
   /* Style the links inside the navigation bar */
-.topnav a {
-    float: left;
-    font-size: clamp(1rem,1vw + 0.75rem,1.5rem);
-    color: #ffffff;
-    background-color: #32620E ;
-    text-align: left;
-    padding: 14px 1px;
-    text-decoration: none;
-    display: flex;
-    font-family: "Impact","sans-serif";
-    margin-left: 100px;
-    width: 40%;
-    
+
+.additional-buttons {
+  text-align: right;
+}
+
+.additional-buttons .btn {
+  margin-left: 10px;
+  background-color: #32620E;
+  color: white;
 
 }
+
+.logo1 {
+  height: 50px; /* Adjust height as needed */
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .logo1 {
+      display: none; /* Hide logo on smaller screens if necessary */
+  }
+}
+
+
+
 
 .image{
     width: max-content;
