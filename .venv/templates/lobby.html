@@ -4,22 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lobby</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        .topnav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            color: white;
+            overflow: hidden;
+            background-color: #32620E;
+            max-width: 150%;
+        }
+
+        .additional-buttons {
+            text-align: right;
+        }
+
+        .additional-buttons .btn {
+            margin-left: 10px;
+            background-color: #32620E;
+            color: white;
+    
+        }
+
+        .logo1 {
+            height: 50px; /* Adjust height as needed */
+            margin-right: 10px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .logo1 {
+                display: none; /* Hide logo on smaller screens if necessary */
+            }
+        }
+
+        .h1{
+            text-align: left;
+            margin-left: auto;
+        }
+
+        
+    </style>
 </head>
 <body>
     <div class="topnav">
-        <div class="image"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5VD0nTIINJKFvxpOP-Fc_HSz0a_6A4PlkANlCwiQ4Ew&s" class="logo_2"> </div>
-        <a href="#home"> 51st Engineer Brigade, Philippine Army</a>
-    </div>
-    <div class="container" style="text-align: center;">
-        <h1 style="text-align: center;">Welcome to the Lobby</h1>
-        <p style="text-align: center;">Click the button below to register:</p>
-        <form action="/registration" method="get" style="text-align: center;">
-            <button type="submit" class="btn">Register</button>
-        </form>
-        <div class="additional-buttons" style="text-align: center;">
+        <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
+        <h1> 51st Engineer Brigade, Philippine Army</h1>
+
+        <div class="additional-buttons">
             <a href="{{ url_for('proctor_login') }}" class="btn">Proctor</a>
             <a href="{{ url_for('admin_login') }}" class="btn">Admin</a>
+
+            <form action="/registration" method="get" style="display: inline-block;">
+                <button type="submit" class="btn">Register</button>
+            </form>
         </div>
     </div>
 </body>
