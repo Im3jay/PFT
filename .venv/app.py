@@ -440,6 +440,84 @@ def admin_access():
 def admin_approval():
     return render_template('admin_approval.html')
 
+@app.route('/pft_results', methods=['GET', 'POST'])
+def pft_results():
+    if request.method == 'POST':
+        search_query = request.form['search_query']
+        cursor = db.cursor()
+        query = "SELECT * FROM PFT_summary WHERE Participant_Number LIKE %s OR First_Name LIKE %s OR Last_Name LIKE %s"
+        cursor.execute(query, ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%'))
+        pft_data = cursor.fetchall()
+        cursor.close()
+        return render_template("pft_results.html", pft_data=pft_data, search_query=search_query)
+    else:
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM PFT_summary")
+        pft_data = cursor.fetchall()
+        cursor.close()
+        return render_template("pft_results.html", pft_data=pft_data)
+
+    
+## @require_admin_session(['admin_access'])
+@app.route('/proctor_approval', methods=['GET', 'POST'])
+def proctor_approval():
+    if request.method == 'POST':
+        search_query = request.form['search_query']
+        cursor = db.cursor()
+        query = "SELECT * FROM proctor_registration WHERE name LIKE %s OR afpsn LIKE %s OR rank LIKE %s OR afp_mos LIKE %s"
+        cursor.execute(query, ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%'))
+        applications = cursor.fetchall()
+        cursor.close()
+        return render_template("proctor_approval.html", applications=applications, search_query=search_query)
+    else:
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM proctor_registration")
+        applications = cursor.fetchall()
+        cursor.close()
+        return render_template("proctor_approval.html", applications=applications)
+## @require_admin_session(['admin_access'])    
+@app.route("/reject-proctor/<int:id>")
+def reject_proctor(id):
+    try:
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM proctor_registration WHERE id = %s", (id,))
+        db.commit()
+        cursor.close()
+        return redirect("/proctor_approval")  # Redirect to the appropriate route
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+## @require_admin_session(['admin_access'])
+@app.route('/participant_approval', methods=['GET', 'POST'])
+def participant_approval():
+    if request.method == 'POST':
+        search_query = request.form['search_query']
+        cursor = db.cursor()
+        query = "SELECT * FROM users_account WHERE first_name LIKE %s OR afpsn LIKE %s OR rank LIKE %s OR afp_mos LIKE %s"
+        cursor.execute(query, ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%'))
+        applications = cursor.fetchall()
+        cursor.close()
+        return render_template("participant_approval.html", applications=applications, search_query=search_query)
+    else:
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM users_account")
+        applications = cursor.fetchall()
+        cursor.close()
+        return render_template("participant_approval.html", applications=applications)
+
+@app.route("/reject-participant/<int:id>")
+def reject_participant(id):
+    try:
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM users_account WHERE id = %s", (id,))
+        db.commit()
+        cursor.close()
+        return redirect("/participant_approval")  # Redirect to the appropriate route
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 @app.route('/admin_participants')
 # @require_admin_session(['admin_access'])
 def admin_participants():

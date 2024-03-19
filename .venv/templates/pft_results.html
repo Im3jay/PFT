@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container-fluid">
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">PFT Results</li>
+        </ol>
+    
+        <!-- Search input field -->
+        <div class="mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+        </div>
+    
+        <div class="card mb-4">
+            <div class="card-header">PFT Summary Table</div>
+            <div class="card-body">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table"></i>
+                       
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {% if pft_data|length < 1 %}
+                            <h4>No data available</h4>
+                            {% else %}
+                            <div class="table-responsive" style="overflow-x: auto;">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">                                <thead>
+                                    <tr>
+                                        <th>Participant Number</th>
+                                        <th>Rank</th>
+                                        <th>First Name</th>
+                                        <th>Middle Name</th>
+                                        <th>Last Name</th>
+                                        <th>AFPSN</th>
+                                        <th>AFP MOS</th>
+                                        <th>Gender</th>
+                                        <th>Age</th>
+                                        <th>Raw Pushup</th>
+                                        <th>Pushup</th>
+                                        <th>Raw Situp</th>
+                                        <th>Situp</th>
+                                        <th>km Run</th>
+                                        <th>Total</th>
+                                        <th>Average</th>
+                                        <th>Remarks</th>
+                                        <th>Unit</th>
+                                        <th>Activity Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in pft_data %}
+                                    <tr>
+                                        <td>{{ row[0] }}</td>
+                                        <td>{{ row[1] }}</td>
+                                        <td>{{ row[2] }}</td>
+                                        <td>{{ row[3] }}</td>
+                                        <td>{{ row[4] }}</td>
+                                        <td>{{ row[5] }}</td>
+                                        <td>{{ row[6] }}</td>
+                                        <td>{{ row[7] }}</td>
+                                        <td>{{ row[8] }}</td>
+                                        <td>{{ row[9] }}</td>
+                                        <td>{{ row[10] }}</td>
+                                        <td>{{ row[11] }}</td>
+                                        <td>{{ row[12] }}</td>
+                                        <td>{{ row[13] }}</td>
+                                        <td>{{ row[14] }}</td>
+                                        <td>{{ row[15] }}</td>
+                                        <td>{{ row[16] }}</td>
+                                        <td>{{ row[17] }}</td>
+                                        <td>{{ row[18] }}</td>
+                                        <td><a href="/edit/{{ row[0] }}" class="btn btn-primary">Edit</a>
+                                            <!-- Edit button -->
+                                            
+                                            <!-- Add any additional buttons or actions here --></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const tableRows = document.querySelectorAll('#dataTable tbody tr');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                tableRows.forEach(function(row) {
+                    const rowData = row.textContent.toLowerCase();
+                    if (rowData.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
