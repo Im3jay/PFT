@@ -12,7 +12,6 @@
             <li class="breadcrumb-item active">PFT Results</li>
         </ol>
     
-        <!-- Search input field -->
         <div class="mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Search...">
         </div>
@@ -78,9 +77,8 @@
                                         <td>{{ row[17] }}</td>
                                         <td>{{ row[18] }}</td>
                                         <td><a href="/edit/{{ row[0] }}" class="btn btn-primary">Edit</a>
-                                            <!-- Edit button -->
                                             
-                                            <!-- Add any additional buttons or actions here --></td>
+                                            </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -95,7 +93,6 @@
     </div>
 
     <script>
-        // JavaScript for search functionality
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             const tableRows = document.querySelectorAll('#dataTable tbody tr');

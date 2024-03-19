@@ -13,7 +13,6 @@
             <li class="breadcrumb-item active">Application Requests</li>
         </ol>
     
-        <!-- Search input field -->
         <div class="mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Search...">
         </div>
@@ -82,16 +81,13 @@
 
     <script>
         function acceptApplication(id) {
-            // Perform action to accept application with the given ID
             console.log("Accept application with ID:", id);
         }
 
         function rejectApplication(id) {
-            // Perform action to reject application with the given ID
             console.log("Reject application with ID:", id);
         }
 
-        // JavaScript for search functionality
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             const tableRows = document.querySelectorAll('#dataTable tbody tr');
