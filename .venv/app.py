@@ -141,7 +141,7 @@ def proctor_registration():
         afp_mos = request.form['afp_mos']
 
         cursor = db.cursor()
-        cursor.execute("INSERT INTO proctor_account (name, afpsn, password, rank, afp_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afp_mos))
+        cursor.execute("INSERT INTO proctor_registration (name, afpsn, password, rank, afp_mos) VALUES (%s, %s, %s, %s, %s)", (name, afpsn, password, rank, afp_mos))
         db.commit()
         cursor.close()
         
