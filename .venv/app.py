@@ -486,6 +486,22 @@ def reject_proctor(id):
         return redirect("/proctor_approval")  # Redirect to the appropriate route
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+## @require_admin_session(['admin_access'])    
+@app.route("/accept-proctor/<int:id>")
+def accept_proctor(id):
+    try:
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM proctor_registration WHERE id = %s", (id,))
+        proctor_account_reg=cursor.fetchone() #        
+        cursor.execute("INSERT INTO proctor_account (name,afpsn,password,rank,afp_mos) VALUES (%s, %s,%s, %s,%s)", (proctor_account_reg[1],proctor_account_reg[2],proctor_account_reg[3],proctor_account_reg[4],proctor_account_reg[5]))
+        cursor.execute("DELETE FROM proctor_registration WHERE id = %s", (id,))
+        db.commit()
+        cursor.close()
+        return redirect("/proctor_approval")  # Redirect to the appropriate route
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 ## @require_admin_session(['admin_access'])
 @app.route('/participant_approval', methods=['GET', 'POST'])
@@ -516,6 +532,20 @@ def reject_participant(id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+## @require_admin_session(['admin_access'])    
+#@app.route("/accept-participant/<int:id>")
+#def accept_proctor(id):
+#    try:
+#        cursor = db.cursor()
+#        cursor.execute("SELECT * FROM users_account WHERE id = %s", (id,))
+#        proctor_account_reg=cursor.fetchone() #        
+#        cursor.execute("INSERT INTO proctor_account (name,afpsn,password,rank,afp_mos) VALUES (%s, %s,%s, %s,%s)", (proctor_account_reg[1],proctor_account_reg[2],proctor_account_reg[3],proctor_account_reg[4],proctor_account_reg[5]))
+#        cursor.execute("DELETE FROM proctor_registration WHERE id = %s", (id,))
+#        db.commit()
+#        cursor.close()
+#        return redirect("/proctor_approval")  # Redirect to the appropriate route
+#    except Exception as e:
+#        return jsonify({"error": str(e)}), 500
 
 
 @app.route('/admin_participants')
