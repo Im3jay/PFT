@@ -18,6 +18,9 @@
 
         <div class="background"> <br> <!-- Start of Wallpaper -->
             <div class="container">
+                <!-- Back button icon -->
+                <a href="#" onclick="goBack()" class="back-icon"><i class="fas fa-chevron-left"></i></a>
+                <!-- End of Back button icon -->
              <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
 
                 <h3>Physical Fitness Test Activity</h3> <br>
@@ -58,6 +61,13 @@
             </form>
             
         </div> <!-- End of Wallpaper -->
+
+        <script>
+            // JavaScript function to navigate back to the previous page
+            function goBack() {
+                window.history.back();
+            }
+        </script>
     </body>
 
 </html>

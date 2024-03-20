@@ -24,6 +24,9 @@
         <div class="background"> <br> <!-- Start of Wallpaper -->
 
             <form action="/pft_kmrun_record" method="post">
+                 <!-- Back button icon -->
+                 <a href="#" onclick="goBack()" class="back-icon"><i class="fas fa-chevron-left"></i></a>
+                 <!-- End of Back button icon -->
                 <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
 
                 <h3 class="font-h3">3:2 KM Run Activity</h3> <br>
@@ -48,7 +51,7 @@
                 <input type="text" placeholder="Enter participant no. here" name="participant_number" id="participantNumber" disabled><br>
                 
                 <input class="btn1" type="submit" value="Submit" id="submitButton" disabled>
-                <input class="btn1" type="button" onclick="goBack()" value="Back">
+                
             </form>
         </div> <!-- End of Wallpaper -->
 
@@ -149,6 +152,10 @@
                 document.getElementById("participantNumber").disabled = true;
                 document.getElementById("submitButton").disabled = true;
             }
+            function goBack() {
+        window.history.back();
+    }
+</script>
         </script>
     </body>
 </html>

@@ -15,6 +15,9 @@
     <div class="background">
    
         <form action="/admin_login" method="post">
+             <!-- Back button icon -->
+             <a href="#" onclick="goBack()" class="back-icon"><i class="fas fa-chevron-left"></i></a>
+             <!-- End of Back button icon -->
             <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
             <h3>Admin Login</h3>
             <h4>LOGIN YOUR ACCOUNT</h4>
@@ -33,6 +36,10 @@
     </form>
    
 </div>
-
+<script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
 </body>
 </html>

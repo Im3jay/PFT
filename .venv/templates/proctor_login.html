@@ -17,6 +17,9 @@
         <div class="background"> <!-- Start of Wallpaper -->
 
             <form method="post"> <!-- Login Form -->
+                 <!-- Back button icon -->
+                 <a href="#" onclick="goBack()" class="back-icon"><i class="fas fa-chevron-left"></i></a>
+                <!-- End of Back button icon -->
                 <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
                 <h3>PFT Proctor</h3>
                 <h4>LOGIN YOUR ACCOUNT</h4>
@@ -35,6 +38,11 @@
             </form> <!-- End of Login Form -->
 
         </div> <!-- End of Wallpaper -->
+<script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
     </body>
 
 </html>

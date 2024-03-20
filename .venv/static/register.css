@@ -9,7 +9,7 @@ body, .background {
 
 .background {
     background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/05/Incipio-Camo-Wallpaper.jpg');
-    height: 250vh;
+    height: 235vh;
     width: 100vw;
     background-position: center;
     background-size: cover;
@@ -178,4 +178,31 @@ margin-top: 7px;
     margin-right: auto;
     width: 50%;
     margin-bottom: 7%;
+}
+
+.btn1{
+    margin-top: 25px;
+    margin-bottom: 5px;
+    width: 60%;
+    background-color: #010101;
+    color: #ffffff;
+    padding: 10px 0;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    align-self: center;
+    font-size: 14px;
+    
+}
+button{
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: 55%;
+    background-color: #010101;
+    color: #ffffff;
+    padding: 10px 0;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center;
 }

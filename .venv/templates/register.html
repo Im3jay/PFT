@@ -13,6 +13,9 @@
     <div class="background">
         
         <form action="/registration" method="POST">
+              <!-- Back button icon -->
+              <a href="#" onclick="goBack()" class="back-icon"><i class="fas fa-chevron-left"></i></a>
+              <!-- End of Back button icon -->
             <image class="logo1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Philippine_Army_Seal.svg/1200px-Philippine_Army_Seal.svg.png"> 
 
             <h3>Registration Form</h3>
@@ -97,12 +100,17 @@
                     <option value="DELTA COY">DELTA COY</option>
                 </select>
             
-            <button type="submit" class="btn" style="text-align: center;">Register</button>
+            <button type="submit" class="btn1" style="text-align: center;">Register</button>
 
      
         <div style="text-align: center;">
         <p class="already-registered" >Already registered? <a href="{{ url_for('lobby') }}">Go to Lobby</a></p>
     </div>
 </div>
+<script>
+function goBack() {
+    window.history.back();
+}
+</script>
 </body>
 </html>

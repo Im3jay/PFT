@@ -8,13 +8,6 @@
     margin-bottom: 20px;
 }
 
-.logo1{
-    position: relative;
-    width: 8%;
-    height: 8%;
-    float: left;
-}
-
 .logo_2 {
     position: relative;
     width: 30%;
@@ -71,11 +64,6 @@ body {
 
 }
 
-
-.nav-item{
-  background-color: #32620E; /* Background color for the top navigation */
-}
-
 /* Header styles */
 header {
     background-color: #333;
@@ -87,6 +75,7 @@ header {
 /* Button styles */
 button {
     padding: 10px 20px;
+    background-color: #000000;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -96,11 +85,11 @@ button {
     width: 50%;
     font-size: 90%;
     text-align: center;
-    background-color: #32620E; /* Background color for the top navigation */
-
 }
 
-
+button:hover {
+    background-color: #000000;
+}
 
 /* Form styles */
 form {
@@ -149,8 +138,13 @@ table th {
 }
 
 h1 {
-  text-align: left;
-  margin-left: auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #000000;
+    /* width: 80%; */
+    font-size: 200%;
+    font-weight: bold;
 }
 
 p{
@@ -169,53 +163,46 @@ select{
 }
 
 .topnav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  color: white;
-  overflow: hidden;
-  background-color: #32620E;
-  max-width: 150%;
+    overflow: hidden;
+    background-color: #32620E;
+    max-width: 100%;
 }
   
   /* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    font-size: clamp(1rem,1vw + 0.75rem,1.5rem);
+    color: #ffffff;
+    background-color: #32620E ;
+    text-align: left;
+    padding: 14px 1px;
+    text-decoration: none;
+    display: flex;
+    font-family: "Impact","sans-serif";
+    margin-left: 100px;
+    width: 40%;
+    
 
-.additional-buttons {
-  text-align: right;
 }
-
-.additional-buttons .btn {
-  margin-left: 10px;
-  background-color: #32620E;
-  color: white;
-
-}
-
-.logo1 {
-  height: 50px; /* Adjust height as needed */
-  margin-right: 10px;
-}
-
-@media screen and (max-width: 600px) {
-  .logo1 {
-      display: none; /* Hide logo on smaller screens if necessary */
-  }
-}
-
-
-
 
 .image{
     width: max-content;
     height: max-content;
 }
 
-.additional-buttons{
-    text-align: right;
-
+.btn-accept {
+    background-color: #28a745;
+    color: #fff;
+    border-color: #28a745;
+    padding: 10px 0;
 }
 
+/* Red button style for rejecting */
+.btn-reject {
+    background-color: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+}
 /* CYBORG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 * {
@@ -677,4 +664,85 @@ select {
     right: 0;
     left: initial;
   }
+
+  
+  .mb-4,
+.my-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  margin-top: 2%;
+ 
+}
+.card-header:first-child {
+  border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+}
+.card-header + .list-group .list-group-item:first-child {
+  border-top: 0;
+}
+
+.card-header-tabs {
+  margin-right: -0.625rem;
+  margin-bottom: -0.75rem;
+  margin-left: -0.625rem;
+  border-bottom: 0;
+}
+
+.card-header-pills {
+  margin-right: -0.625rem;
+  margin-left: -0.625rem;
+}
+
+.container-fluid{
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+ 
+}
+
+.container-fluid{
+  width: 100%;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+ .container-fluid{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-link .card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.card-link .card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.card-link .content {
+  flex: 1;
+}
+
+.card-link .iconBx {
+  margin-left: 20px;
+}
 }

@@ -7,7 +7,7 @@ body, .background {
 
 .background {
     background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/05/Incipio-Camo-Wallpaper.jpg');
-    height: 150vh;
+    height: 155vh;
     width: 100vw;
     background-position: center;
     background-size: cover;
@@ -168,9 +168,10 @@ margin-top: 7px;
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 80%;
+    width: 20%;
     font-size: 90%;
     font-family: 'Poppins',sans-serif;
+    border-radius: 10px;
     
    
 }
