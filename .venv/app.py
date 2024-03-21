@@ -762,7 +762,7 @@ def pft_situp_record():
 
             process_participant(cursor, afpsn, act_date)
 
-        return "Data submitted successfully."
+        # return "Data submitted successfully."
 
     return render_template('pft_situp.html')
 
@@ -883,7 +883,7 @@ def pft_pushup_record():
 
             process_participant(cursor, afpsn, act_date)
 
-        return "Data submitted successfully."
+        # return "Data submitted successfully."
         
     return render_template('pft_pushup.html')
 
@@ -950,7 +950,7 @@ def pft_kmrun_record():
              cursor.execute(update_query, ( raw_kmrun, afpsn,act_date))
              db.commit()
 
-        return "Data submitted successfully."
+        # return "Data submitted successfully."
 
     return render_template('pft_kmrun.html')
 

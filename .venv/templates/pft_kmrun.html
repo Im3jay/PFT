@@ -50,7 +50,7 @@
                 <label>Participant No.:</label>
                 <input type="text" placeholder="Enter participant no. here" name="participant_number" id="participantNumber" disabled><br>
                 
-                <input class="btn1" type="submit" value="Submit" id="submitButton" disabled>
+                <input class="btn1" type="submit" value="Submit" id="submitButton3" disabled>
                 
             </form>
         </div> <!-- End of Wallpaper -->
@@ -133,14 +133,14 @@
                 document.getElementById("rawKmrun_id").disabled = true;
                 document.getElementById("actDate_id").disabled = true;
                 document.getElementById("participantNumber").disabled = true;
-                document.getElementById("submitButton").disabled = true;
+                document.getElementById("submitButton3").disabled = true;
             }
 
             function enableTextBoxes() {
                 document.getElementById("rawKmrun_id").disabled = false;
                 document.getElementById("actDate_id").disabled = false;
                 document.getElementById("participantNumber").disabled = false;
-                document.getElementById("submitButton").disabled = false;
+                document.getElementById("submitButton3").disabled = false;
             }
 
             function clearAndDisableInputs() {
@@ -150,12 +150,14 @@
                 document.getElementById("rawKmrun_id").disabled = true;
                 document.getElementById("actDate_id").disabled = true;
                 document.getElementById("participantNumber").disabled = true;
-                document.getElementById("submitButton").disabled = true;
+                document.getElementById("submitButton3").disabled = true;
             }
             function goBack() {
-        window.history.back();
-    }
-</script>
+                window.history.back();
+            }
+            document.getElementById("submitButton3").addEventListener("click", function() {
+                alert("Data submitted successfully!");
+            });
         </script>
     </body>
 </html>

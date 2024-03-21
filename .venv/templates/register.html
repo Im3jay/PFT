@@ -100,17 +100,20 @@
                     <option value="DELTA COY">DELTA COY</option>
                 </select>
             
-            <button type="submit" class="btn1" style="text-align: center;">Register</button>
+            <button id="myBtn1" type="submit" class="btn1" style="text-align: center;">Register</button>
 
      
         <div style="text-align: center;">
         <p class="already-registered" >Already registered? <a href="{{ url_for('lobby') }}">Go to Lobby</a></p>
     </div>
 </div>
-<script>
-function goBack() {
-    window.history.back();
-}
-</script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        document.getElementById("myBtn1").addEventListener("click", function() {
+            alert("Registration Complete!");
+        });
+    </script>
 </body>
 </html>
