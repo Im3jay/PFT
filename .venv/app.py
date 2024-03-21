@@ -532,6 +532,23 @@ def reject_participant(id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+## @require_admin_session(['admin_access'])
+@app.route('/participant_registration/<int:id>', methods=['GET', 'POST'])
+def participant_registration(id):
+     
+    #  participant_number = request.form['participant_number_id']
+    #  activity_date = request.form['activity_date_id']
+    
+    #  cursor = db.cursor()
+    #  cursor.execute("SELECT * FROM users_account WHERE id = %s", (id,))
+    #   applications = cursor.fetchone()
+      #cursor.execute("INSERT INTO participant_registration (rank,first_name, middle_name,surname,afpsn,afp_mos, gender,birthdate,unit,company,participant_number,activity_date) VALUES (%s, %s,%s, %s,%s,%s, %s,%s, %s,%s,%s,%s)", (applications[1],applications[2],applications[3],applications[4],applications[5],applications[6],applications[7],applications[8],applications[9],applications[10],participant_number,activity_date))
+    #   cursor.execute("DELETE FROM users_account WHERE id = %s", (id,))    
+    #   db.commit()
+
+    #   cursor.close()
+       return render_template("admin_participants.html") #, applications=applications
+
 ## @require_admin_session(['admin_access'])    
 #@app.route("/accept-participant/<int:id>")
 #def accept_proctor(id):

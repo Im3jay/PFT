@@ -458,8 +458,8 @@ select {
   width: 100%;
   padding: 20px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 20px;
 }
 
 .admin_cardBox .card {
@@ -609,9 +609,9 @@ select {
   .admin_main.active {
     left: 300px;
   }
-  .admin_cardBox {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  /*.admin_cardBox {
+    grid-template-columns: repeat(2, calc(50% - 15px));
+  }*/
 }
 
 @media (max-width: 768px) {
@@ -627,9 +627,9 @@ select {
 }
 
 @media (max-width: 480px) {
-  .admin_cardBox {
+  /*.admin_cardBox {
     grid-template-columns: repeat(1, 1fr);
-  }
+  }*/
   .cardHeader h2 {
     font-size: 20px;
   }

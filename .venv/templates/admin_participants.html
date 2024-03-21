@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participant Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='participant_approval.css') }}">
+</head>
+<body>
+
+<h1>Participant Registration</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Rank</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Surname</th>
+        <th>AFPSN</th>
+        <th>AFPMOS</th>
+        <th>Gender</th>
+        <th>Birthdate</th>
+        <th>Unit</th>
+        <th>Company</th>
+       
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Pvt</td>
+        <td>Aarone John</td>
+        <td>Middle Name</td>
+        <td>Revilla</td>
+        <td>O-987654</td>
+        <td>MOS-987654</td>
+        <td>M</td>
+        <td>02-03-2002</td>
+        <td>OG 6</td>
+        <td>Company Here</td>
+        
+    </tr>
+   </table>
+<br>
+   <label>Participant Number:</label>
+   <input type="text" placeholder="Place participant number" name="participant_number" id="participant_id">
+   <div class="display" id="participant_number_display"></div>
+   <br>
+   <!-- Push-up data  TYPE="NUMBER" -->
+   <label>Activity Date</label>
+   <input type="date" placeholder="Enter activity date here" name="activity_date" id="activity_date_id" style="background-color: #f2f2f2">
+
+   <form action="" method="POST" onsubmit="return confirm('All details are current?');">
+    <br>
+    <button type="submit" >Register for PFT</button>
+</form>
+
+<script>
+    // JavaScript code to handle approval/rejection
+    document.querySelectorAll('.approve-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            // Handle approval logic here, e.g., send a request to the server
+            console.log('User approved');
+        });
+    });
+
+    document.querySelectorAll('.reject-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            // Handle rejection logic here, e.g., send a request to the server
+            console.log('User rejected');
+        });
+    });
+</script>
+
+</body>
+</html>
