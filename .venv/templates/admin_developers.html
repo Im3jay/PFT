@@ -4,44 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Developer Profile</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .profile {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .profile img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-        .profile h2 {
-            margin: 0;
-            color: #333;
-        }
-        .profile p {
-            margin: 10px 0;
-            color: #666;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_access.css') }}">
 </head>
 <body>
+
+
+
+    <div class="admin_container">
+        <div class="admin_navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="person-outline"></ion-icon>
+                        </span>
+                        <span class="title">ADMINISTRATOR</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Registration for PFT</span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Participants</span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="#">
+                        <span class="admin_icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Settings</span>
+                    </a>
+                </li>
+
+             
+
+                <li>
+                    <a href="/admin_login">
+                        <span class="admin_icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/admin_developers">
+                        <span class="admin_icon">
+                            <ion-icon name="construct-outline"></ion-icon>
+                        </span>
+                        <span class="title">Developers</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="admin_main">
+            <div class="admin_topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+              <div class="admin_search">
+                    <label>
+                        <input type="text" placeholder="Search">
+                        <!-- <ion-icon name="search-outline"></ion-icon> -->
+                    </label>
+                </div>
+            </div>
+
+
 
 <div class="container">
     <div class="profile">
