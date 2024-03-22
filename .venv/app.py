@@ -549,6 +549,46 @@ def participant_registration(id):
     #   cursor.close()
        return render_template("admin_participants.html") #, applications=applications
 
+# Route to render the edit user page
+@app.route('/edit-user/<int:user_id>')
+def edit_user(user_id):
+    try:
+        cursor = db.cursor(dictionary=True)
+        query = "SELECT * FROM users_account WHERE id = %s"
+        cursor.execute(query, (user_id,))
+        user = cursor.fetchone()
+        cursor.close()
+        if user:
+            return render_template('edit_user.html', user=user)
+        else:
+            return "User not found", 404  # Return a 404 error if the user is not found
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500  # Return a 500 error for any exception
+
+# Route to update user account information
+@app.route('/update-user/<int:user_id>', methods=['POST'])  # Allow only POST method for this route
+def update_user(user_id):
+    if request.method == 'POST':
+        rank = request.form['rank']
+        first_name = request.form['first_name']
+        middle_name = request.form['middle_name']
+        surname = request.form['surname']
+        afpsn = request.form['afpsn']
+        afp_mos = request.form['afp_mos']
+        gender = request.form['gender']
+        birth_date = request.form['birth_date']
+        unit = request.form['unit']
+        company = request.form['company']
+
+        cursor = db.cursor()
+        query = "UPDATE users_account SET rank=%s, first_name=%s, middle_name=%s, surname=%s, afpsn=%s, afp_mos=%s, gender=%s, birth_date=%s, unit=%s, company=%s WHERE id=%s"
+        cursor.execute(query, (rank, first_name, middle_name, surname, afpsn, afp_mos, gender, birth_date, unit, company, user_id))
+        db.commit()
+        cursor.close()
+        return redirect("/participant_approval")  # Redirect to the appropriate route
+
+
+
 ## @require_admin_session(['admin_access'])    
 #@app.route("/accept-participant/<int:id>")
 #def accept_proctor(id):

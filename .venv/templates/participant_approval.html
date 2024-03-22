@@ -72,6 +72,10 @@
                                             <form action="/reject-participant/{{ row[0] }}" method="POST" onsubmit="return confirm('Are you sure you want to reject this participant?');">
                                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button>
                                             </form>
+
+                                            <form action="/edit-user/{{ row[0] }}" method="get">
+                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
                                     <!-- {% endfor %} -->
