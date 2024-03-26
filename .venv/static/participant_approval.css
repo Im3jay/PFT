@@ -195,6 +195,9 @@ select{
     color: #fff;
     border-color: #28a745;
     padding: 10px 0;
+    width: 90%;
+    
+    
 }
 
 /* Red button style for rejecting */
@@ -202,7 +205,21 @@ select{
     background-color: #dc3545;
     color: #fff;
     border-color: #dc3545;
+    padding: 10px 0;
+    width: 90%;
+    margin-top: -18px;
 }
+
+.btn-primary{
+  background-color: #2294e5;
+  color: #fff;
+  border-color: #2294e5;
+  padding: 10px 0;
+  width: 90%;
+  margin-top: -18px;
+  margin-bottom: -5%;
+}
+
 /* CYBORG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 * {

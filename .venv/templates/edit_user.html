@@ -3,32 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User</title>
+    <title>Edit Participant Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit_user.css') }}">
+
+   <style>
+        /* Custom CSS for adjusting margin and centering */
+        .custom-container {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 500px; /* Adjust max-width as needed */
+        }
+
+        h1 {
+            margin-top: 40px; /* Adjust margin top as needed */
+        }
+        label {
+            font-weight: bold;
+        }
+
+        button{
+            margin-bottom: 40px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Edit User</h1>
-    <form action="/update-user/{{ user['id'] }}" method="post">
-        <label for="rank">Rank:</label>
-        <input type="text" id="rank" name="rank" value="{{ user['rank'] }}"><br>
-        <label for="first_name">First Name:</label>
-        <input type="text" id="first_name" name="first_name" value="{{ user['first_name'] }}"><br>
-        <label for="middle_name">Middle Name:</label>
-        <input type="text" id="middle_name" name="middle_name" value="{{ user['middle_name'] }}"><br>
-        <label for="surname">Surname:</label>
-        <input type="text" id="surname" name="surname" value="{{ user['surname'] }}"><br>
-        <label for="afpsn">AFPSN:</label>
-        <input type="text" id="afpsn" name="afpsn" value="{{ user['afpsn'] }}"><br>
-        <label for="afp_mos">AFP MOS:</label>
-        <input type="text" id="afp_mos" name="afp_mos" value="{{ user['afp_mos'] }}"><br>
-        <label for="gender">Gender:</label>
-        <input type="text" id="gender" name="gender" value="{{ user['gender'] }}"><br>
-        <label for="birth_date">Birth Date:</label>
-        <input type="text" id="birth_date" name="birth_date" value="{{ user['birth_date'] }}"><br>
-        <label for="unit">Unit:</label>
-        <input type="text" id="unit" name="unit" value="{{ user['unit'] }}"><br>
-        <label for="company">Company:</label>
-        <input type="text" id="company" name="company" value="{{ user['company'] }}"><br>
-        <button type="submit">Update</button>
-    </form>
+    <div class="container custom-container"> <!-- Added custom-container class -->
+        <h1 class="text-center">Edit User</h1> <!-- Centered heading -->
+        <form action="/update-user/{{ user['id'] }}" method="post">
+            <div class="form-group">
+                <label for="rank">Rank:</label>
+                <input type="text" id="rank" name="rank" class="form-control" value="{{ user['rank'] }}">
+            </div>
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" class="form-control" value="{{ user['first_name'] }}">
+            </div>
+            <div class="form-group">
+                <label for="middle_name">Middle Name:</label>
+                <input type="text" id="middle_name" name="middle_name" class="form-control" value="{{ user['middle_name'] }}">
+            </div>
+            <div class="form-group">
+                <label for="surname">Surname:</label>
+                <input type="text" id="surname" name="surname" class="form-control" value="{{ user['surname'] }}">
+            </div>
+            <div class="form-group">
+                <label for="afpsn">AFPSN:</label>
+                <input type="text" id="afpsn" name="afpsn" class="form-control" value="{{ user['afpsn'] }}">
+            </div>
+            <div class="form-group">
+                <label for="afp_mos">AFP MOS:</label>
+                <input type="text" id="afp_mos" name="afp_mos" class="form-control" value="{{ user['afp_mos'] }}">
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <input type="text" id="gender" name="gender" class="form-control" value="{{ user['gender'] }}">
+            </div>
+            <div class="form-group">
+                <label for="birth_date">Birth Date:</label>
+                <input type="text" id="birth_date" name="birth_date" class="form-control" value="{{ user['birth_date'] }}">
+            </div>
+            <div class="form-group">
+                <label for="unit">Unit:</label>
+                <input type="text" id="unit" name="unit" class="form-control" value="{{ user['unit'] }}">
+            </div>
+            <div class="form-group">
+                <label for="company">Company:</label>
+                <input type="text" id="company" name="company" class="form-control" value="{{ user['company'] }}">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Update</button> <!-- Centered button -->
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
