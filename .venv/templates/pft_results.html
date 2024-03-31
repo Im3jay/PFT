@@ -17,6 +17,26 @@
         <div class="mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Search...">
         </div>
+
+        <div class="container mt-4">
+            <!-- Existing elements -->
+
+            <!-- Date filter inputs -->
+            <div class="form-row mb-3">
+                <div class="col">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate" class="form-control">
+                </div>
+                <div class="col d-flex align-items-end">
+                    <button id="dateFilterBtn" class="btn btn-primary">Apply Filter</button>
+                </div>
+            </div>
+            <!-- Existing elements -->
+        </div>
     
         <div class="card mb-4">
             <div class="card-header">PFT Summary Table</div>
@@ -80,7 +100,12 @@
                                         <td>{{ row[17] }}</td>
                                         <td>{{ row[18] }}</td>
                                         <td>
-                                            <a href="/edit/{{ row[0] }}" class="btn btn-primary">Edit</a>
+                                            <form action="/edit-summary/{{ row[5] }}/{{ row[18] }}" method="get">
+                                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                            </form>
+                                            <form action="/add-kmrun/{{ row[5] }}/{{ row[18] }}" method="get">
+                                                <button type="submit" class="btn btn-primary btn-sm">Add KM run data</button>
+                                            </form>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -102,7 +127,30 @@
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             const tableRows = document.querySelectorAll('#dataTable tbody tr');
-
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            const dateFilterBtn = document.getElementById('dateFilterBtn');
+    
+            // Function to show or hide rows based on date range
+            function filterByDateRange(startDate, endDate) {
+                tableRows.forEach(function(row) {
+                    const activityDate = row.cells[18].textContent; // Assuming the activity date is in the 18th cell
+                    if ((!startDate || activityDate >= startDate) && (!endDate || activityDate <= endDate)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+    
+            // Event listener for the date filter button
+            dateFilterBtn.addEventListener('click', function() {
+                const startDate = startDateInput.value;
+                const endDate = endDateInput.value;
+                filterByDateRange(startDate, endDate);
+            });
+    
+            // Event listener for the search input
             searchInput.addEventListener('input', function() {
                 const searchTerm = searchInput.value.toLowerCase();
                 tableRows.forEach(function(row) {
@@ -116,5 +164,6 @@
             });
         });
     </script>
+    
 </body>
 </html>
