@@ -42,14 +42,7 @@
                 <label>Sit-up Count:</label>
                 <input type="text" placeholder="Enter sit-up count here" name="raw_situp" id="rawSitup_id" disabled>
                 
-                <!-- Date -->
-                <label>Date:</label>
-                <input type="date" placeholder="--SET DATE--" name="act_date" id="actDate_id" disabled>
-                
-                <!-- Participant Number -->
-                <label>Participant No.:</label>
-                <input type="text" placeholder="Enter participant no. here" name="participant_number" id="participantNumber" disabled><br>
-                
+                 
                 <input class="btn1" type="submit" value="Submit" id="submitButton2" disabled>
                 
             </form>
@@ -131,25 +124,17 @@
 
             function lockTextBoxes() {
                 document.getElementById("rawSitup_id").disabled = true;
-                document.getElementById("actDate_id").disabled = true;
-                document.getElementById("participantNumber").disabled = true;
                 document.getElementById("submitButton2").disabled = true;
             }
 
             function enableTextBoxes() {
                 document.getElementById("rawSitup_id").disabled = false;
-                document.getElementById("actDate_id").disabled = false;
-                document.getElementById("participantNumber").disabled = false;
                 document.getElementById("submitButton2").disabled = false;
             }
 
             function clearAndDisableInputs() {
                 document.getElementById("rawSitup_id").value = "";
-                document.getElementById("actDate_id").value = "";
-                document.getElementById("participantNumber").value = "";
                 document.getElementById("rawSitup_id").disabled = true;
-                document.getElementById("actDate_id").disabled = true;
-                document.getElementById("participantNumber").disabled = true;
                 document.getElementById("submitButton2").disabled = true;
             }
 

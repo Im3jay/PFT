@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Participant Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit_user.css') }}">
+
+   <style>
+        /* Custom CSS for adjusting margin and centering */
+        .custom-container {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 500px; /* Adjust max-width as needed */
+        }
+
+        h1 {
+            margin-top: 40px; /* Adjust margin top as needed */
+        }
+        label {
+            font-weight: bold;
+        }
+
+        button{
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container custom-container"> <!-- Added custom-container class -->
+        <h1 class="text-center">Edit Summary</h1> <!-- Centered heading -->
+        <form action="/update-summary/{{ summary['afpsn'] }}/{{ summary['act_date'] }}" method="POST">
+            <div class="form-group">
+                <label for="rank">Rank:</label>
+                <input type="text" id="rank" name="rank" class="form-control" value="{{ summary['rank'] }}">
+            </div>
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" class="form-control" value="{{ summary['first_name'] }}">
+            </div>
+            <div class="form-group">
+                <label for="middle_name">Middle Name:</label>
+                <input type="text" id="middle_name" name="middle_name" class="form-control" value="{{ summary['middle_name'] }}">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" class="form-control" value="{{ summary['last_name'] }}">
+            </div>
+            <div class="form-group">
+                <label for="afpsn">AFPSN:</label>
+                <input type="text" id="afpsn" name="afpsn" class="form-control" value="{{ summary['afpsn'] }}">
+            </div>
+            <div class="form-group">
+                <label for="afp_mos">AFP MOS:</label>
+                <input type="text" id="afp_mos" name="afp_mos" class="form-control" value="{{ summary['afp_mos'] }}">
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <input type="text" id="gender" name="gender" class="form-control" value="{{ summary['gender'] }}">
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="text" id="age" name="age" class="form-control" value="{{ summary['age'] }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="raw_pushup">Raw Pushup Data:</label>
+                <input type="text" id="raw_pushup" name="raw_pushup" class="form-control" value="{{ summary['raw_pushup'] }}">
+            </div>
+            <div class="form-group">
+                <label for="pushup">Pushup Grade:</label>
+                <input type="text" id="pushup" name="pushup" class="form-control" value="{{ summary['pushup'] }}">
+            </div>
+            <div class="form-group">
+                <label for="raw_situp">Raw Situp Data:</label>
+                <input type="text" id="raw_situp" name="raw_situp" class="form-control" value="{{ summary['raw_situp'] }}">
+            </div>
+            <div class="form-group">
+                <label for="situp">Situp Grade:</label>
+                <input type="text" id="situp" name="situp" class="form-control" value="{{ summary['situp'] }}">
+            </div>
+            <div class="form-group">
+                <label for="kmrun">KM Run Grade:</label>
+                <input type="text" id="kmrun" name="kmrun" class="form-control" value="{{ summary['kmrun'] }}">
+            </div>
+            <div class="form-group">
+                <label for="total">Total Grade:</label>
+                <input type="text" id="total" name="total" class="form-control" value="{{ summary['total'] }}">
+            </div>
+            <div class="form-group">
+                <label for="average">Average Grade:</label>
+                <input type="text" id="average" name="average" class="form-control" value="{{ summary['average'] }}">
+            </div>
+            <div class="form-group">
+                <label for="remarks">Remarks:</label>
+                <input type="text" id="remarks" name="remarks" class="form-control" value="{{ summary['remarks'] }}">
+            </div>
+            <div class="form-group">
+                <label for="unit">Unit:</label>
+                <input type="text" id="unit" name="unit" class="form-control" value="{{ summary['unit'] }}">
+            </div>
+           
+            <button type="submit" class="btn btn-primary btn-block">Update</button> <!-- Centered button -->
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

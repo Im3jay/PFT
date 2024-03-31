@@ -28,32 +28,30 @@
        
     </tr>
     <tr>
-        <td>1</td>
-        <td>Pvt</td>
-        <td>Aarone John</td>
-        <td>Middle Name</td>
-        <td>Revilla</td>
-        <td>O-987654</td>
-        <td>MOS-987654</td>
-        <td>M</td>
-        <td>02-03-2002</td>
-        <td>OG 6</td>
-        <td>Company Here</td>
+        <td>{{ user['id'] }}</td>
+        <td>{{ user['rank'] }}</td>
+        <td>{{ user['first_name'] }}</td>
+        <td>{{ user['middle_name'] }}</td>
+        <td>{{ user['surname'] }}</td>
+        <td>{{ user['afpsn'] }}</td>
+        <td>{{ user['afp_mos'] }}</td>
+        <td>{{ user['gender'] }}</td>
+        <td>{{ user['birth_date'] }}</td>
+        <td>{{ user['unit'] }}</td>
+        <td>{{ user['company'] }}</td>
         
     </tr>
    </table>
 <br>
-   <label>Participant Number:</label>
-   <input type="text" placeholder="Place participant number" name="participant_number" id="participant_id">
-   <div class="display" id="participant_number_display"></div>
-   <br>
-   <!-- Push-up data  TYPE="NUMBER" -->
-   <label>Activity Date</label>
-   <input type="date" placeholder="Enter activity date here" name="activity_date" id="activity_date_id" style="background-color: #f2f2f2">
-
-   <form action="" method="POST" onsubmit="return confirm('All details are current?');">
+<form action="/register-pft/{{ user['id'] }}" method="POST" onsubmit="return confirm('All details are current?');">
+    <label for="participant_number">Participant Number:</label>
+    <input type="text" placeholder="Enter participant number" name="participant_number" id="participant_number">
     <br>
-    <button type="submit" >Register for PFT</button>
+    <label for="activity_date">Activity Date:</label>
+    <input type="date" placeholder="Enter activity date" name="activity_date" id="activity_date" style="background-color: #f2f2f2">
+    <br>
+    <button type="submit">Register for PFT</button>
+</form>
 </form>
 
 <script>

@@ -46,14 +46,24 @@
                 </div>
                 <img src="https://cdn-icons-png.flaticon.com/256/2548/2548429.png">
             </a>
-
-            <a href="/pft_kmrun_record" class="container2">
+            
+            <a href="#" onclick="showAlert()" class="container2"> 
+                <!-- <a href="/pft_kmrun_record" class="container2"></a> former link to kmrun-->
                 <div class="text">
                     <h4>3:2 KM Run Test</h4>
                     <p>A test used to measure cardiovascular endurance.</p>
                 </div>
                 <img src="https://cdn-icons-png.flaticon.com/256/6266/6266049.png">
             </a>
+            
+            <script>
+                function showAlert() {
+                    // Prevent the default behavior of the anchor tag
+                    event.preventDefault();
+                    // Show an alert box with the message "In progress"
+                    alert("In progress");
+                }
+            </script>
             <div style="text-align: center;">
             <button class="logout-button" type="button" onclick="document.getElementById('logoutForm').submit();">Logout</button></div>
             <form id="logoutForm" action="{{ url_for('proctor_logout') }}" method="post" style="display: none;">

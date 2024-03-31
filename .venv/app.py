@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, session
-from datetime import datetime
+from datetime import date, datetime
 import mysql.connector
 import uuid
 from functools import wraps
@@ -153,7 +153,8 @@ def suggest_usernames():
     afpsn = request.args.get('afpsn')
 
     cursor = db.cursor()
-    cursor.execute("SELECT first_name FROM users_account WHERE afpsn LIKE %s", (afpsn + '%',))
+    today = date.today().isoformat()  # Get today's date in ISO format (YYYY-MM-DD)
+    cursor.execute("SELECT first_name FROM users_pft WHERE afpsn LIKE %s AND activity_date = %s", (afpsn + '%',today))
     first_names = cursor.fetchall()
 
     suggestions = ''.join(f"<div onclick='fillSerialNumber(\"{first_name[0]}\")'>{first_name[0]}</div>" for first_name in first_names)
@@ -163,22 +164,24 @@ def suggest_usernames():
 def get_serial_number():
     first_name = request.args.get('username')
 
-    cursor = db.cursor()
-    cursor.execute("SELECT afpsn FROM users_account WHERE first_name = %s", (first_name,))
-    afpsn = cursor.fetchone()
+    cursor = db.cursor(dictionary=True)  # Set dictionary=True
+    today = date.today().isoformat()  # Get today's date in ISO format (YYYY-MM-DD)
+    cursor.execute("SELECT * FROM users_pft WHERE first_name = %s AND activity_date = %s", (first_name, today,))
+    afpsn_record = cursor.fetchone()
 
-    if afpsn:
-        return jsonify(int(afpsn[0]))
+    if afpsn_record:
+        afpsn = afpsn_record['afpsn'].strip('"')  # Remove quotation marks
+        return jsonify(afpsn)
     else:
         return jsonify(None)
 
 @app.route('/search_serial', methods=['GET'])
 def search_serial():
     afpsn = request.args.get('afpsn')
-
+    afpsn = afpsn.strip('"')
     # Check if serial number exists
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users_account WHERE afpsn = %s", (afpsn,))
+    cursor.execute("SELECT * FROM users_pft WHERE afpsn = %s", (afpsn,))
     user_info = cursor.fetchone()
 
     if user_info:
@@ -207,11 +210,11 @@ def proctor_access():
         # Serial number exists, process the rest of the form data
         raw_pushup = request.form.get('raw_pushup')
         raw_situp = request.form.get('raw_situp')
-        act_date = request.form.get('act_date')
+        act_date = datetime.now().date()
         #participant_number = request.form.get('participant_number')
 
         if not (raw_pushup and raw_situp and act_date ): #and participant_number
-            return "Push-up count, sit-up count, date, or participant number is missing."
+            return "Push-up count is missing."
 
         try:
             act_date = datetime.strptime(act_date, '%Y-%m-%d').date()
@@ -322,8 +325,11 @@ def proctor_access():
                 query = f"SELECT {table_name} FROM `situp_reference` WHERE repetitions = %s;"
                 cursor.execute(query, (raw_situp,))
                 participant_score = cursor.fetchone()[0]
-                insert_query = f"INSERT INTO pft_situp (afpsn, act_date, raw_situp, situp) VALUES (%s, %s, %s, %s)"
-                cursor.execute(insert_query, (afpsn, act_date, raw_pushup, participant_score))
+                cursor.execute("SELECT firstname FROM users_pft WHERE afpsn = %s", (afpsn,))
+                name = cursor.fetchone()
+                
+                insert_query = f"INSERT INTO pft_situp (afpsn, name, act_date, raw_situp, situp) VALUES (%s, %s, %s, %s, %s)"
+                cursor.execute(insert_query, (afpsn, name, act_date, raw_pushup, participant_score))
                 db.commit()  # Commit the changes to the database
 
             def process_participant(cursor, afpsn, act_date):
@@ -535,7 +541,19 @@ def reject_participant(id):
 ## @require_admin_session(['admin_access'])
 @app.route('/participant_registration/<int:id>', methods=['GET', 'POST'])
 def participant_registration(id):
-     
+    try:
+        cursor = db.cursor(dictionary=True)
+        query = "SELECT * FROM users_account WHERE id = %s"
+        cursor.execute(query, (id,))
+        user = cursor.fetchone()
+        cursor.close()
+        if user:
+            return render_template("admin_participants.html",user=user) #, applications=applications
+        else:
+            return "User not found", 404  # Return a 404 error if the user is not found
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500  # Return a 500 error for any exception
+    
     #  participant_number = request.form['participant_number_id']
     #  activity_date = request.form['activity_date_id']
     
@@ -547,7 +565,38 @@ def participant_registration(id):
     #   db.commit()
 
     #   cursor.close()
-       return render_template("admin_participants.html") #, applications=applications
+
+@app.route('/register-pft/<int:id>', methods=['POST'])
+def register_pft(id):
+    try:
+        # Fetch user data from users_account table
+        cursor = db.cursor(dictionary=True)
+        query = "SELECT * FROM users_account WHERE id = %s"
+        cursor.execute(query, (id,))
+        user = cursor.fetchone()
+
+        # Extract data from the form
+        participant_number = request.form['participant_number']
+        activity_date = request.form['activity_date']
+
+        # Check if participant already exists in users_pft
+        query_check = "SELECT * FROM users_pft WHERE afpsn = %s AND activity_date = %s"
+        cursor.execute(query_check, (user['afpsn'], activity_date))
+        existing_participant = cursor.fetchone()
+
+        if existing_participant:
+            return "Participant already registered for the given activity date"
+
+        # Insert data into users_pft table
+        query_insert = "INSERT INTO users_pft (rank, first_name, middle_name, surname, afpsn, afp_mos, gender, birth_date, unit, company, activity_date, participant_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        values = (user['rank'], user['first_name'], user['middle_name'], user['surname'], user['afpsn'], user['afp_mos'], user['gender'], user['birth_date'], user['unit'], user['company'], activity_date, participant_number)
+        cursor.execute(query_insert, values)
+        db.commit()
+        cursor.close()
+
+        return redirect("/participant_approval")  # Redirect to success page after registration
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500  # Return a 500 error for any exception
 
 # Route to render the edit user page
 @app.route('/edit-user/<int:user_id>')
@@ -588,6 +637,79 @@ def update_user(user_id):
         return redirect("/participant_approval")  # Redirect to the appropriate route
 
 
+# Route to render the edit summary page ADD LAST NAME
+@app.route('/edit-summary/<string:afpsn>/<string:act_date>')
+def edit_summary(afpsn, act_date):
+    try:
+        cursor = db.cursor(dictionary=True)
+        query = "SELECT * FROM pft_summary WHERE afpsn = %s AND act_date = %s"
+        cursor.execute(query, (afpsn, act_date))
+        summary = cursor.fetchone()
+        cursor.close()
+        if summary:
+            return render_template('edit_summary.html', summary=summary)
+        else:
+            return "Summary not found", 404  # Return a 404 error if the user is not found
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500  # Return a 500 error for any exception
+
+# Route to update summary account information
+@app.route('/update-summary/<string:afpsn_value>/<string:act_date_value>', methods=['POST'])  # Allow only POST method for this route
+def update_summary(afpsn_value, act_date_value):
+    if request.method == 'POST':
+        # Your update logic here using afpsn and act_date
+        rank = request.form['rank']
+        first_name = request.form['first_name']
+        middle_name = request.form['middle_name']
+        last_name = request.form['last_name']
+        afpsn = request.form['afpsn']
+        afp_mos = request.form['afp_mos']
+        gender = request.form['gender']
+        age = request.form['age']
+        raw_pushup = request.form['raw_pushup']
+        pushup = request.form['pushup']
+        raw_situp = request.form['raw_situp']
+        situp = request.form['situp']
+
+        kmrun = request.form['kmrun']
+        total = request.form['total']
+        average = request.form['average']
+        remarks = request.form['remarks']
+        unit = request.form['unit']
+
+        cursor = db.cursor()
+        query = "UPDATE pft_summary SET rank=%s, first_name=%s, middle_name=%s, last_name=%s, afpsn=%s, afp_mos=%s, gender=%s, age=%s, raw_pushup=%s, pushup=%s, raw_situp=%s, situp=%s, kmrun=%s, total=%s, average=%s, remarks=%s, unit=%s WHERE afpsn=%s AND act_date=%s"
+        cursor.execute(query, (rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, age, raw_pushup, pushup, raw_situp, situp, kmrun, total, average, remarks, unit, afpsn_value, act_date_value))
+        db.commit()
+        cursor.close()
+        return redirect("/pft_results")  # Redirect to the appropriate route
+
+@app.route('/add-kmrun/<string:afpsn>/<string:act_date>')
+def add_kmrun(afpsn, act_date):
+    try:
+        cursor = db.cursor(dictionary=True)
+        query = "SELECT * FROM pft_summary WHERE afpsn = %s AND act_date = %s"
+        cursor.execute(query, (afpsn, act_date))
+        summary = cursor.fetchone()
+        cursor.close()
+        if summary:
+            return render_template('addKMrun.html', summary=summary)
+        else:
+            return "Summary not found", 404  # Return a 404 error if the user is not found
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500  # Return a 500 error for any exception
+
+# Route to update summary account information
+@app.route('/update-kmrun/<string:afpsn_value>/<string:act_date_value>', methods=['POST'])  # Allow only POST method for this route
+def update_kmrun(afpsn_value, act_date_value):
+    if request.method == 'POST':
+        kmrun = request.form['kmrun']
+        cursor = db.cursor()
+        query = "UPDATE pft_summary SET kmrun=%s WHERE afpsn=%s AND act_date=%s"
+        cursor.execute(query, (kmrun,  afpsn_value, act_date_value))
+        db.commit()
+        cursor.close()
+        return redirect("/pft_results")  # Redirect to the appropriate route        
 
 ## @require_admin_session(['admin_access'])    
 #@app.route("/accept-participant/<int:id>")
@@ -722,7 +844,7 @@ def view_data():
 def pft_situp_record():
     if request.method == 'POST':
         afpsn = request.form.get('afpsn')
-
+        afpsn = afpsn.strip('"')
         # Check if serial number exists
         cursor = db.cursor()
         cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,))
@@ -733,18 +855,11 @@ def pft_situp_record():
 
         # Serial number exists, process the rest of the form data
         raw_situp = request.form.get('raw_situp')
-        act_date = request.form.get('act_date')
+        act_date = datetime.now().date()
         #participant_number = request.form.get('participant_number')
 
-        if not (raw_situp and act_date ): #and participant_number
-            return "Sit-up count, date, or participant number is missing."
-
-        try:
-            act_date = datetime.strptime(act_date, '%Y-%m-%d').date()
-        except ValueError:
-            # Handle parsing error
-            return "Error: Invalid date format"
-    
+        if not (raw_situp): #and participant_number
+            return "Sit-up count is missing."
 
         # Process sit-up data
         cursor.execute("SELECT * FROM pft_situp WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
@@ -785,16 +900,25 @@ def pft_situp_record():
                 query = f"SELECT {table_name} FROM `situp_reference` WHERE repetitions = %s;"
                 cursor.execute(query, (raw_situp,))
                 participant_score = cursor.fetchone()[0]
-                insert_query = f"INSERT INTO pft_situp (afpsn, act_date, raw_situp, situp) VALUES (%s, %s, %s, %s)"
-                cursor.execute(insert_query, (afpsn, act_date, raw_situp, participant_score))
+                cursor.execute("SELECT first_name FROM users_pft WHERE afpsn = %s", (afpsn,))
+                name = cursor.fetchone()
+                
+                insert_query = f"INSERT INTO pft_situp (afpsn, name, act_date, raw_situp, situp) VALUES (%s, %s, %s, %s, %s)"
+                cursor.execute(insert_query, (afpsn, name[0], act_date, raw_situp, participant_score))
                 db.commit()  # Commit the changes to the database
+
+
+
+
+                cursor.execute("SELECT participant_number FROM users_pft WHERE afpsn = %s", (afpsn,))
+                participant_number = cursor.fetchone()
 
                 update_query = """
                     UPDATE pft_summary
-                    SET raw_situp=%s, situp = %s
+                    SET  participant_number=%s, raw_situp=%s, situp = %s
                     WHERE afpsn = %s AND act_date=%s
                 """
-                cursor.execute(update_query, (raw_situp, participant_score, afpsn,act_date))
+                cursor.execute(update_query, (participant_number[0],raw_situp, participant_score, afpsn,act_date))
                 db.commit()
 
             def process_participant(cursor, afpsn, act_date):
@@ -845,7 +969,7 @@ def check_existing_situp_data():
 def pft_pushup_record():
     if request.method == 'POST':
         afpsn = request.form.get('afpsn')
-
+        afpsn = afpsn.strip('"')
         # Check if serial number exists
         cursor = db.cursor()
         cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,))
@@ -856,17 +980,12 @@ def pft_pushup_record():
 
         # Serial number exists, process the rest of the form data
         raw_pushup = request.form.get('raw_pushup')
-        act_date = request.form.get('act_date')
+        act_date = datetime.now().date()
+
         #participant_number = request.form.get('participant_number')
 
-        if not (raw_pushup and act_date ): #and participant_number
-            return "Push-up count, date, or participant number is missing."
-
-        try:
-            act_date = datetime.strptime(act_date, '%Y-%m-%d').date()
-        except ValueError:
-            # Handle parsing error
-            return "Error: Invalid date format"
+        if not (raw_pushup): #and participant_number
+            return "Push-up count is missing."
         
         cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
         existing_raw_pushup = cursor.fetchone()
@@ -906,16 +1025,20 @@ def pft_pushup_record():
                 query = f"SELECT {table_name} FROM `pushup_reference` WHERE repetitions = %s;"
                 cursor.execute(query, (raw_pushup,))
                 participant_score = cursor.fetchone()[0]
-                insert_query = f"INSERT INTO pft_pushup (afpsn, act_date, raw_pushup, pushup) VALUES (%s, %s, %s, %s)"
-                cursor.execute(insert_query, (afpsn, act_date, raw_pushup, participant_score))
+                cursor.execute("SELECT first_name FROM users_pft WHERE afpsn = %s", (afpsn,))
+                name = cursor.fetchone()
+                insert_query = f"INSERT INTO pft_pushup (afpsn, name, act_date, raw_pushup, pushup) VALUES (%s, %s,%s, %s, %s)"
+                cursor.execute(insert_query, (afpsn, name[0],act_date, raw_pushup, participant_score))
                 db.commit()  
 
                 # Summary table insert data
                 cursor.execute("SELECT rank, first_name, middle_name, surname, afpsn, afp_mos, gender, unit FROM users_account WHERE afpsn = %s", (afpsn,))
                 user_data = cursor.fetchone()
+                cursor.execute("SELECT participant_number FROM users_pft WHERE afpsn = %s", (afpsn,))
+                participant_number = cursor.fetchone()
                 # Insert data into pft_summary table
-                summary_query = "INSERT INTO pft_summary (rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, raw_pushup, pushup, situp, kmrun, unit, act_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(summary_query, (user_data[0], user_data[1], user_data[2], user_data[3], user_data[4], user_data[5], user_data[6], raw_pushup, participant_score, 0, 0,user_data[7], act_date))
+                summary_query = "INSERT INTO pft_summary (participant_number, rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, raw_pushup, pushup, situp, kmrun, unit, act_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(summary_query, (participant_number[0],user_data[0], user_data[1], user_data[2], user_data[3], user_data[4], user_data[5], user_data[6], raw_pushup, participant_score, 0, 0,user_data[7], act_date))
                 db.commit() 
 
             def process_participant(cursor, afpsn, act_date):
@@ -966,7 +1089,7 @@ def check_existing_pushup_data():
 def pft_kmrun_record():
     if request.method == 'POST':
         afpsn = request.form.get('afpsn')
-
+        afpsn = afpsn.strip('"')
         # Check if serial number exists
         cursor = db.cursor()
         cursor.execute("SELECT first_name FROM users_account WHERE afpsn = %s", (afpsn,))
