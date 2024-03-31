@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='proctor_approval.css') }}">
+    <style>
+        .back-btn {
+            color: black; /* Set the color to black */
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -14,6 +23,8 @@
             <div class="col-md-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="container-fluid">
+                        <a href="{{ url_for('admin_access') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+
                     <h1 class="mt-4"> Proctor Account Approval </h1>
                     </div>
                 </div>

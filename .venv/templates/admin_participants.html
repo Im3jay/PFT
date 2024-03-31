@@ -7,8 +7,76 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='participant_approval.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .back-btn {
+            color: black; /* Set the color to black */
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
+
+ <a href="{{ url_for('admin_access') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
 
 <h1>Participant Registration</h1>
 
@@ -25,7 +93,6 @@
         <th>Birthdate</th>
         <th>Unit</th>
         <th>Company</th>
-       
     </tr>
     <tr>
         <td>{{ user['id'] }}</td>
@@ -39,35 +106,23 @@
         <td>{{ user['birth_date'] }}</td>
         <td>{{ user['unit'] }}</td>
         <td>{{ user['company'] }}</td>
-        
     </tr>
-   </table>
-<br>
+</table>
+
 <form action="/register-pft/{{ user['id'] }}" method="POST" onsubmit="return confirm('All details are current?');">
     <label for="participant_number">Participant Number:</label>
     <input type="text" placeholder="Enter participant number" name="participant_number" id="participant_number">
     <br>
     <label for="activity_date">Activity Date:</label>
-    <input type="date" placeholder="Enter activity date" name="activity_date" id="activity_date" style="background-color: #f2f2f2">
+    <input type="date" placeholder="Enter activity date" name="activity_date" id="activity_date">
     <br>
     <button type="submit">Register for PFT</button>
 </form>
-</form>
 
 <script>
-    // JavaScript code to handle approval/rejection
-    document.querySelectorAll('.approve-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            // Handle approval logic here, e.g., send a request to the server
-            console.log('User approved');
-        });
-    });
-
-    document.querySelectorAll('.reject-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            // Handle rejection logic here, e.g., send a request to the server
-            console.log('User rejected');
-        });
+    // JavaScript code to handle going back to the previous page
+    document.querySelector('button[type="submit"]').addEventListener('click', function() {
+        window.history.back();
     });
 </script>
 

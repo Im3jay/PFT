@@ -6,11 +6,23 @@
     <title>Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pft_results.css') }}">
+    <style>
+        .back-btn {
+            color: black; /* Set the color to black */
+            position: absolute;
+            top: 50px;
+            left: 30px;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
+
     <div class="container mt-4">
         <ol class="breadcrumb mb-4">
+            <!-- Back button -->
+    <a href="{{ url_for('admin_access') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
             <li class="breadcrumb-item active">PFT Results</li>
         </ol>
     
@@ -52,7 +64,7 @@
                             <h4>No data available</h4>
                             {% else %}
                             <div class="table-responsive" style="overflow-x: auto;">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">                                
+                                <table class="table table-bordered" id="dataTable" width="30%" cellspacing="0">                                
                                 <thead>
                                     <tr>
                                         <th>Participant Number</th>
@@ -100,11 +112,11 @@
                                         <td>{{ row[17] }}</td>
                                         <td>{{ row[18] }}</td>
                                         <td>
-                                            <form action="/edit-summary/{{ row[5] }}/{{ row[18] }}" method="get">
+                                            <form action="/edit-summary/{{ row[5] }}/{{ row[18] }}" method="get" style="display: inside;">
                                                 <button type="submit" class="btn btn-primary btn-sm">Edit</button>
                                             </form>
-                                            <form action="/add-kmrun/{{ row[5] }}/{{ row[18] }}" method="get">
-                                                <button type="submit" class="btn btn-primary btn-sm">Add KM run data</button>
+                                            <form action="/add-kmrun/{{ row[5] }}/{{ row[18] }}" method="get" style="display: inside;">
+                                                <button type="submit" class="btn btn-accept btn-sm">Add KM run</button>
                                             </form>
                                         </td>
                                     </tr>
