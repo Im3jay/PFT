@@ -45,10 +45,10 @@
 <br>
 <form action="/register-pft/{{ user['id'] }}" method="POST" onsubmit="return confirm('All details are current?');">
     <label for="participant_number">Participant Number:</label>
-    <input type="text" placeholder="Enter participant number" name="participant_number" id="participant_number">
+    <input type="text" placeholder="Enter participant number" name="participant_number" id="participant_number" required>
     <br>
     <label for="activity_date">Activity Date:</label>
-    <input type="date" placeholder="Enter activity date" name="activity_date" id="activity_date" style="background-color: #f2f2f2">
+    <input type="date" placeholder="Enter activity date" name="activity_date" id="activity_date" style="background-color: #f2f2f2" required>
     <br>
     <button type="submit">Register for PFT</button>
 </form>
