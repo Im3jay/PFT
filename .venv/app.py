@@ -358,22 +358,22 @@ def proctor_access():
 
     return render_template('proctor_access.html')
 
-# Route for Admin registration page
-@app.route('/admin_registration', methods=['GET', 'POST'])
-def admin_registration():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+# # Route for Admin registration page
+# @app.route('/admin_registration', methods=['GET', 'POST'])
+# def admin_registration():
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
         
-        cursor = db.cursor()
-        # Insert data into admin_credentials table
-        cursor.execute("INSERT INTO admin_credentials (username, password) VALUES (%s, %s)", (username, password))
-        db.commit()
-        cursor.close()
+#         cursor = db.cursor()
+#         # Insert data into admin_credentials table
+#         cursor.execute("INSERT INTO admin_credentials (username, password) VALUES (%s, %s)", (username, password))
+#         db.commit()
+#         cursor.close()
         
-        return redirect(url_for('admin_login'))  # Redirect to Admin login page after registration
-    else:
-        return render_template('admin_registration.html')
+#         return redirect(url_for('admin_login'))  # Redirect to Admin login page after registration
+#     else:
+#         return render_template('admin_registration.html')
 
 # # Route for Admin Login Page
 # @app.route('/admin_login', methods=['GET', 'POST'])
@@ -579,6 +579,9 @@ def register_pft(id):
         participant_number = request.form['participant_number']
         activity_date = request.form['activity_date']
 
+        if not (participant_number):
+            return "Participant number or activity date is missing."
+
         # Check if participant already exists in users_pft
         query_check = "SELECT * FROM users_pft WHERE afpsn = %s AND activity_date = %s"
         cursor.execute(query_check, (user['afpsn'], activity_date))
@@ -592,11 +595,29 @@ def register_pft(id):
         values = (user['rank'], user['first_name'], user['middle_name'], user['surname'], user['afpsn'], user['afp_mos'], user['gender'], user['birth_date'], user['unit'], user['company'], activity_date, participant_number)
         cursor.execute(query_insert, values)
         db.commit()
+
+        # Close the cursor after executing the insert query
         cursor.close()
+
+        # Reopen the cursor to execute the next query
+        cursor = db.cursor(dictionary=True)
+
+        # Fetch data from users_pft table
+        cursor.execute("SELECT * FROM users_pft WHERE afpsn = %s", (user['afpsn'],))
+        users_pft_data = cursor.fetchall()[0]
+
+        # Insert data into pft_summary table
+        summary_query = "INSERT INTO pft_summary (participant_number, rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, raw_pushup, pushup, situp, kmrun, unit, act_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(summary_query, (users_pft_data['participant_number'], users_pft_data['rank'], users_pft_data['first_name'], users_pft_data['middle_name'], users_pft_data['surname'], users_pft_data['afpsn'], users_pft_data['afp_mos'], users_pft_data['gender'], 0, 0, 0, 0, users_pft_data['unit'], activity_date))
+        db.commit()
+
+        cursor.close()  # Close the cursor after executing the second set of queries
 
         return redirect("/participant_approval")  # Redirect to success page after registration
     except Exception as e:
         return f"An error occurred: {str(e)}", 500  # Return a 500 error for any exception
+
+
 
 # Route to render the edit user page
 @app.route('/edit-user/<int:user_id>')
@@ -700,16 +721,38 @@ def add_kmrun(afpsn, act_date):
         return f"An error occurred: {str(e)}", 500  # Return a 500 error for any exception
 
 # Route to update summary account information
-@app.route('/update-kmrun/<string:afpsn_value>/<string:act_date_value>', methods=['POST'])  # Allow only POST method for this route
+@app.route('/update-kmrun/<string:afpsn_value>/<string:act_date_value>', methods=['POST'])
 def update_kmrun(afpsn_value, act_date_value):
     if request.method == 'POST':
-        kmrun = request.form['kmrun']
-        cursor = db.cursor()
-        query = "UPDATE pft_summary SET kmrun=%s WHERE afpsn=%s AND act_date=%s"
-        cursor.execute(query, (kmrun,  afpsn_value, act_date_value))
+        kmrun = float(request.form['kmrun'])  # Convert kmrun to float
+        cursor = db.cursor(dictionary=True)
+
+        # Update kmrun in pft_summary table
+        query_update_kmrun = "UPDATE pft_summary SET kmrun = %s WHERE afpsn = %s AND act_date = %s"
+        cursor.execute(query_update_kmrun, (kmrun, afpsn_value, act_date_value))
         db.commit()
+
+        # Fetch pushup, situp, and kmrun grades from pft_summary table
+        query_fetch_grades = "SELECT pushup, situp, kmrun FROM pft_summary WHERE afpsn = %s AND act_date = %s"
+        cursor.execute(query_fetch_grades, (afpsn_value, act_date_value))
+        grades_data = cursor.fetchone()
+
+        # Calculate the average of pushup, situp, and kmrun grades
+        pushup_grade = grades_data['pushup']
+        situp_grade = grades_data['situp']
+        total_grade = pushup_grade + situp_grade + kmrun
+        average_grade = total_grade / 3
+
+        # Determine pass or fail remark
+        remark = "Pass" if pushup_grade >= 75 and situp_grade >= 75 and kmrun >= 75 else "Fail"
+
+        # Update total and average grades, and remark in pft_summary table
+        query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"
+        cursor.execute(query_update_summary, (total_grade, average_grade, remark, afpsn_value, act_date_value))
+        db.commit()
+
         cursor.close()
-        return redirect("/pft_results")  # Redirect to the appropriate route        
+        return redirect("/pft_results")        
 
 ## @require_admin_session(['admin_access'])    
 #@app.route("/accept-participant/<int:id>")
@@ -786,58 +829,6 @@ def view_data():
     proctor_data = cursor.fetchall()
     cursor.close()
     return jsonify({"users_account": user_data, "proctors": proctor_data})
-
-# # Route for Run Page
-# @app.route('/pft_kmrun')
-# def pft_kmrun():
-#     return render_template('pft_kmrun.html')
-
-# # Route for Pushup Page
-# @app.route('/pft_pushup')
-# def pft_pushup():
-#     return render_template('pft_pushup.html')
-
-# # Route for Situp Page
-# @app.route('/pft_situp')
-# def pft_situp():
-#     return render_template('pft_situp.html')
-
-
-# @app.route('/record_pushup', methods=['POST'])
-# def record_pushup():
-#     if request.method == 'POST':
-#         pushup_reps = request.form['pushup_reps']
-        
-#         cursor = db.cursor()
-#         cursor.execute("INSERT INTO pft_pushup_results (reps) VALUES (%s)", (pushup_reps,))
-#         db.commit()
-#         cursor.close()
-        
-#         return redirect(url_for('proctor_access'))
-
-# @app.route('/record_situp', methods=['POST'])
-# def record_situp():
-#     if request.method == 'POST':
-#         situp_reps = request.form['situp_reps']
-        
-#         cursor = db.cursor()
-#         cursor.execute("INSERT INTO pft_situp_results (reps) VALUES (%s)", (situp_reps,))
-#         db.commit()
-#         cursor.close()
-        
-#         return redirect(url_for('proctor_access'))
-
-# @app.route('/record_kmrun', methods=['POST'])
-# def record_kmrun():
-#     if request.method == 'POST':
-#         km_run = request.form['km_run']
-        
-#         cursor = db.cursor()
-#         cursor.execute("INSERT INTO pft_kmrun_results (distance) VALUES (%s)", (km_run,))
-#         db.commit()
-#         cursor.close()
-        
-#         return redirect(url_for('proctor_access'))
 
 @app.route('/pft_situp_record', methods=['GET', 'POST'])
 @require_session(['proctor_access'])
@@ -1037,8 +1028,14 @@ def pft_pushup_record():
                 cursor.execute("SELECT participant_number FROM users_pft WHERE afpsn = %s", (afpsn,))
                 participant_number = cursor.fetchone()
                 # Insert data into pft_summary table
-                summary_query = "INSERT INTO pft_summary (participant_number, rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, raw_pushup, pushup, situp, kmrun, unit, act_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(summary_query, (participant_number[0],user_data[0], user_data[1], user_data[2], user_data[3], user_data[4], user_data[5], user_data[6], raw_pushup, participant_score, 0, 0,user_data[7], act_date))
+                # Summary table insert data
+                
+                update_query = """
+                    UPDATE pft_summary
+                    SET  raw_pushup=%s, pushup = %s
+                    WHERE afpsn = %s AND act_date=%s
+                """
+                cursor.execute(update_query, (raw_pushup, participant_score, afpsn,act_date))
                 db.commit() 
 
             def process_participant(cursor, afpsn, act_date):

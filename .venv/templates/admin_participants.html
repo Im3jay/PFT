@@ -120,9 +120,19 @@
 </form>
 
 <script>
-    // JavaScript code to handle going back to the previous page
-    document.querySelector('button[type="submit"]').addEventListener('click', function() {
-        window.history.back();
+    // JavaScript code to handle approval/rejection
+    document.querySelectorAll('.approve-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            // Handle approval logic here, e.g., send a request to the server
+            console.log('User approved');
+        });
+    });
+
+    document.querySelectorAll('.reject-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            // Handle rejection logic here, e.g., send a request to the server
+            console.log('User rejected');
+        });
     });
 </script>
 
