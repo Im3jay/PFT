@@ -66,7 +66,7 @@ def registration():
         cursor.execute("INSERT INTO users_account (rank, first_name, middle_name, surname, afpsn, afp_mos, gender, birth_date, unit, company) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (rank, first_name, middle_name, surname, afpsn, afp_mos, gender, birth_date, unit, company))
         db.commit()
         cursor.close()
-        return redirect(url_for('lobby'))
+        #return redirect(url_for('lobby'))
     return render_template('register.html')
 
 # Route for Proctor Login Page
@@ -102,9 +102,10 @@ def proctor_login():
             # Redirect to proctor_welcome.html
             return redirect(url_for('proctor_welcome'))
         else:
-            # Redirect to proctor_login.html with error message
-            return render_template('proctor_login.html', error="Invalid AFPSN or password. Please try again.")
+            # Display alert and redirect to the same page
+            return render_template('proctor_login.html', alert="Incorrect credentials!")
     return render_template('proctor_login.html')
+
 
 @app.route('/proctor_logout', methods=['POST'])
 def proctor_logout():
@@ -430,8 +431,8 @@ def admin_login():
             # Redirect to admin_access.html
             return redirect(url_for('admin_access'))
         else:
-            # Redirect to admin_login.html with error message
-            return render_template('admin_login.html', error="Invalid Username or password. Please try again.")
+            # Display alert and redirect to the same page
+            return render_template('admin_login.html', alert="Incorrect credentials!")
     return render_template('admin_login.html')
 
 # Route for Admin Access Page
@@ -588,7 +589,7 @@ def register_pft(id):
         existing_participant = cursor.fetchone()
 
         if existing_participant:
-            return "Participant already registered for the given activity date"
+            return "<script>alert('Participant already registered for the given activity date'); window.location.href = '/participant_registration/24';</script>"
 
         # Insert data into users_pft table
         query_insert = "INSERT INTO users_pft (rank, first_name, middle_name, surname, afpsn, afp_mos, gender, birth_date, unit, company, activity_date, participant_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -850,7 +851,8 @@ def pft_situp_record():
         #participant_number = request.form.get('participant_number')
 
         if not (raw_situp): #and participant_number
-            return "Sit-up count is missing."
+            # return "Sit-up count is missing."
+            return "<script>alert('Sit-up count is missing!'); window.location.href = '/pft_situp_record';</script>"
 
         # Process sit-up data
         cursor.execute("SELECT * FROM pft_situp WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
@@ -976,7 +978,8 @@ def pft_pushup_record():
         #participant_number = request.form.get('participant_number')
 
         if not (raw_pushup): #and participant_number
-            return "Push-up count is missing."
+            # return "Push-up count is missing."
+            return "<script>alert('Push-up count is missing!'); window.location.href = '/pft_pushup_record';</script>"
         
         cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s AND act_date = %s", (afpsn, act_date))
         existing_raw_pushup = cursor.fetchone()
