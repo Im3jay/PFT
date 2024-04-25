@@ -23,6 +23,7 @@ window.addEventListener('unload', function (e) {
     sendLogoutRequest();
 });
 
+
 // FOR PFT RELATED SITES
 
 // ADD IN <HEAD>

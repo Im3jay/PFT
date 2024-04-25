@@ -43,6 +43,7 @@ def require_admin_session(route_names):
         return decorated_function
     return decorator
 
+
 # Route for lobby page
 @app.route('/')
 def lobby():
@@ -435,6 +436,7 @@ def admin_login():
             return render_template('admin_login.html', alert="Incorrect credentials!")
     return render_template('admin_login.html')
 
+
 # Route for Admin Access Page
 @app.route('/admin_access')
 @require_admin_session(['admin_access'])
@@ -745,7 +747,7 @@ def update_kmrun(afpsn_value, act_date_value):
         average_grade = total_grade / 3
 
         # Determine pass or fail remark
-        remark = "Pass" if pushup_grade >= 75 and situp_grade >= 75 and kmrun >= 75 else "Fail"
+        remark = "Passed" if pushup_grade >= 75 and situp_grade >= 75 and kmrun >= 75 else "Failed"
 
         # Update total and average grades, and remark in pft_summary table
         query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"

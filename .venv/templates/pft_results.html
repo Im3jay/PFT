@@ -22,7 +22,7 @@
     <div class="container mt-4">
         <ol class="breadcrumb mb-4">
             <!-- Back button -->
-    <a href="{{ url_for('admin_access') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <a href="{{ url_for('admin_access') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
             <li class="breadcrumb-item active">PFT Results</li>
         </ol>
     
@@ -108,7 +108,13 @@
                                         <td>{{ row[13] }}</td>
                                         <td>{{ row[14] }}</td>
                                         <td>{{ row[15] }}</td>
-                                        <td>{{ row[16] }}</td>
+                                        <td>
+                                            {% if row[16] == 'Passed' %}
+                                                <span style="color: black;">{{ row[16] }}</span>
+                                            {% else %}
+                                                <span style="color: red;">{{ row[16] }}</span>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ row[17] }}</td>
                                         <td>{{ row[18] }}</td>
                                         <td>
