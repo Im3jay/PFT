@@ -6,6 +6,7 @@ from functools import wraps
 from flask import request
 
 
+
 app = Flask(__name__)
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -467,6 +468,28 @@ def delete_proctor(afpsn):
     db.commit()
     
     return redirect('/passed_proctors_list')  # Redirect to the page with the updated proctor list
+
+@app.route('/passed_account_list')
+def passed_account_list():
+    cursor = db.cursor(dictionary=True)
+    
+    # Fetch data from proctor_account table
+    query = "SELECT participant_number, rank, first_name, middle_name, surname, afpsn,afp_mos, gender,  birth_date, unit, activity_date  FROM users_pft"
+    cursor.execute(query)
+    participant_list = cursor.fetchall()
+
+    return render_template('passedAccount.html', participant_list=participant_list)
+
+@app.route('/delete_passed_account_list/<int:afpsn>')
+def delete_passed_account_list(afpsn):
+    cursor = db.cursor()
+    
+    # Delete the proctor with the given ID
+    query = "DELETE FROM users_pft WHERE afpsn = %s"
+    cursor.execute(query, (afpsn,))
+    db.commit()
+    
+    return redirect('/passed_account_list')  # Redirect to the page with the updated proctor list
 
 ## @require_admin_session(['admin_access'])    
 @app.route("/accept-proctor/<int:id>")

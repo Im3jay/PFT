@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approved Proctors List</title>
+    <title>Approved Participant List</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='pft_results.css') }}">
@@ -21,14 +21,13 @@
 
 <div class="container mt-4">
     <ol class="breadcrumb mb-4">
-        <!-- Back button -->
         <a href="{{ url_for('admin_access') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
         <li class="breadcrumb-item active">Passed Proctors List</li>
     </ol>
 
     <div class="container mt-4">
         <div class="card mb-4">
-            <div class="card-header">Approved Proctors List</div>
+            <div class="card-header">Approved Participant List</div>
             <div class="card-body">
                 <div class="card mb-4">
                     <div class="card-header">
@@ -36,31 +35,43 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            {% if proctor_list|length < 1 %}
+                            {% if participant_list|length < 1 %}
                                 <h4>No data available</h4>
                             {% else %}
                                 <div class="table-responsive" style="overflow-x: auto;">
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>AFPSN</th>
+                                            <th>Participant Number</th>
                                             <th>Rank</th>
-                                            <th>AFP_MOS</th>
-                                            <th>Date Added As Proctor</th>
+                                            <th>First Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Surname</th>
+                                            <th>Afpsn</th>
+                                            <th>Afp_mos</th>
+                                            <th>Gender</th>
+                                            <th>Birthdate</th>
+                                            <th>Unit</th>
+                                            <th>Activity Date</th>
                                             <th>Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for row in proctor_list %}
+                                        {% for row in participant_list %}
                                             <tr>
-                                                <td>{{ row['name'] }}</td>
-                                                <td>{{ row['afpsn'] }}</td>
+                                                <td>{{ row['participant_number'] }}</td>
                                                 <td>{{ row['rank'] }}</td>
+                                                <td>{{ row['first_name'] }}</td>
+                                                <td>{{ row['middle_name'] }}</td>
+                                                <td>{{ row['surname'] }}</td>
+                                                <td>{{ row['afpsn'] }}</td>
                                                 <td>{{ row['afp_mos'] }}</td>
-                                                <td>{{ row['date_added'] }}</td>
+                                                <td>{{ row['gender'] }}</td>
+                                                <td>{{ row['birth_date'] }}</td>
+                                                <td>{{ row['unit'] }}</td>
+                                                <td>{{ row['activity_date'] }}</td>
                                                 <td>
-                                                    <form action="/delete_proctor_list/{{ row['afpsn'] }}" method="get">
+                                                    <form action="/delete_passed_account_list/{{ row['afpsn'] }}" method="get">
                                                         <button type="submit" class="btn btn-primary btn-sm">Delete</button>
                                                     </form>
                                                 </td>
