@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passed Proctors List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pft_results.css') }}">
+    <style>
+        .back-btn {
+            color: black; /* Set the color to black */
+            position: absolute;
+            top: 50px;
+            left: 30px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <ol class="breadcrumb mb-4">
+        <!-- Back button -->
+        <a href="{{ url_for('admin_access') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <li class="breadcrumb-item active">Passed Proctors List</li>
+    </ol>
+
+    <div class="container mt-4">
+        <div class="card mb-4">
+            <div class="card-header">Passed Proctors List</div>
+            <div class="card-body">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table"></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {% if proctor_list|length < 1 %}
+                                <h4>No data available</h4>
+                            {% else %}
+                                <div class="table-responsive" style="overflow-x: auto;">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>AFPSN</th>
+                                            <th>Rank</th>
+                                            <th>AFP_MOS</th>
+                                            <th>Date Added As Proctor</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for row in proctor_list %}
+                                            <tr>
+                                                <td>{{ row['name'] }}</td>
+                                                <td>{{ row['afpsn'] }}</td>
+                                                <td>{{ row['rank'] }}</td>
+                                                <td>{{ row['afp_mos'] }}</td>
+                                                <td>{{ row['date_added'] }}</td>
+                                                <td>
+                                                    <form action="/delete_proctor_list/{{ row['afpsn'] }}" method="get">
+                                                        <button type="submit" class="btn btn-primary btn-sm">Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

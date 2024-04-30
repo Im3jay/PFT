@@ -80,7 +80,8 @@
                                         <th>Pushup</th>
                                         <th>Raw Situp</th>
                                         <th>Situp</th>
-                                        <th>km Run</th>
+                                        <th>Raw kmrun</th>
+                                        <th>Km Run</th>
                                         <th>Total</th>
                                         <th>Average</th>
                                         <th>Remarks</th>
@@ -108,23 +109,36 @@
                                         <td>{{ row[13] }}</td>
                                         <td>{{ row[14] }}</td>
                                         <td>{{ row[15] }}</td>
+                                        <td>{{ row[16] }}</td>
                                         <td>
-                                            {% if row[16] == 'Passed' %}
-                                                <span style="color: black;">{{ row[16] }}</span>
+                                            {% if row[17] == 'Passed' %}
+                                                <span style="color: black;">{{ row[17] }}</span>
                                             {% else %}
-                                                <span style="color: red;">{{ row[16] }}</span>
+                                                <span style="color: red;">{{ row[17] }}</span>
                                             {% endif %}
                                         </td>
-                                        <td>{{ row[17] }}</td>
                                         <td>{{ row[18] }}</td>
+                                        <td>{{ row[19] }}</td>
                                         <td>
-                                            <form action="/edit-summary/{{ row[5] }}/{{ row[18] }}" method="get" style="display: inside;">
+                                            <form action="/edit-summary/{{ row[5] }}/{{ row[19] }}" method="get" style="display: inline;">
                                                 <button type="submit" class="btn btn-primary btn-sm">Edit</button>
                                             </form>
-                                            <form action="/add-kmrun/{{ row[5] }}/{{ row[18] }}" method="get" style="display: inside;">
+                                            
+
+                                            <form action="/compute-results/{{ row[5] }}/{{ row[19] }}" method="post" style="display: inline;">
+                                                <button type="submit" class="btn btn-accept btn-sm">Compute for results</button>
+                                            </form>    
+                                            
+                                            {% if row[13] %}
+                                            <!-- If row[13] has a value, the button will not be rendered -->
+                                            {% else %}
+                                            <!-- If row[13] is empty or null, the button will be displayed -->
+                                            <form action="/add-kmrun/{{ row[5] }}/{{ row[19] }}" method="get">
                                                 <button type="submit" class="btn btn-accept btn-sm">Add KM run</button>
                                             </form>
+                                            {% endif %}
                                         </td>
+                                        
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -152,7 +166,7 @@
             // Function to show or hide rows based on date range
             function filterByDateRange(startDate, endDate) {
                 tableRows.forEach(function(row) {
-                    const activityDate = row.cells[18].textContent; // Assuming the activity date is in the 18th cell
+                    const activityDate = row.cells[19].textContent; // Assuming the activity date is in the 18th cell
                     if ((!startDate || activityDate >= startDate) && (!endDate || activityDate <= endDate)) {
                         row.style.display = '';
                     } else {

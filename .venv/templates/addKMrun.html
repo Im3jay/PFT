@@ -26,19 +26,52 @@
         button{
             margin-bottom: 40px;
         }
+
+        /* Added custom CSS for form boxes */
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between; /* Arrange items with space between them */
+        }
+
+        .form-group label {
+            width: 45%; /* Set width of labels */
+        }
+
+        .form-group input {
+            width: 45%; /* Set width of input fields */
+        }
+        .p{
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container custom-container"> <!-- Added custom-container class -->
         <h1 class="text-center">Add KM run</h1> <!-- Centered heading -->
+
+        <!-- Text showing user's AFPSN and name -->
+        <div class="text-center mb-3">
+            <p>AFPSN: {{ summary['afpsn'] }}</p>
+            <p>Name: {{ summary['last_name'] }} {{ summary['first_name'] }}</p>
+        </div>
+
+        <br>
+
         <form action="/update-kmrun/{{ summary['afpsn'] }}/{{ summary['act_date'] }}" method="POST">
  
-            <div class="form-group">
-                <label for="kmrun">KM Run Grade:</label>
-                <input type="text" id="kmrun" name="kmrun" class="form-control" value="{{ summary['kmrun'] }}">
-            </div>
+<!-- Form boxes for representing the time of KM run (minutes and seconds) -->
+<div class="form-group">
+    <label for="km_minutes">Minute:</label>
+    <input type="text" id="km_minutes" name="km_minutes" class="form-control mr-2"> <!-- Added mr-2 for margin-right -->
+    <span class="colon">:</span> <!-- Use span instead of p for better styling -->
+
+    <!-- Adjust the spacing between ":" and "Seconds:" -->
+    <label for="km_seconds" class="ml-3">Seconds:</label>
+    <input type="text" id="km_seconds" name="km_seconds" class="form-control">
+</div>
+
  
-           
             <button type="submit" class="btn btn-primary btn-block">Update</button> <!-- Centered button -->
         </form>
     </div>

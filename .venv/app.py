@@ -191,6 +191,7 @@ def search_serial():
         # Combine first name, middle name, and surname
         full_name = f"{user_info['first_name']} {user_info['middle_name']} {user_info['surname']}"
         user_info['full_name'] = full_name
+
         return jsonify(user_info)  # Return user information if found
     else:
         print(f"Serial number {afpsn} not found.")
@@ -443,6 +444,48 @@ def admin_login():
 def admin_access():
     return render_template('admin_access.html')
 
+#Code for the proctor list
+
+@app.route('/passed_proctors_list')
+def passed_proctors_list():
+    cursor = db.cursor(dictionary=True)
+    
+    # Fetch data from proctor_account table
+    query = "SELECT name, afpsn, rank, afp_mos, date_added FROM proctor_account"
+    cursor.execute(query)
+    proctor_list = cursor.fetchall()
+
+    return render_template('passedProctor.html', proctor_list=proctor_list)
+
+@app.route('/delete_proctor_list/<int:afpsn>')
+def delete_proctor(afpsn):
+    cursor = db.cursor()
+    
+    # Delete the proctor with the given ID
+    query = "DELETE FROM proctor_account WHERE afpsn = %s"
+    cursor.execute(query, (afpsn,))
+    db.commit()
+    
+    return redirect('/passed_proctors_list')  # Redirect to the page with the updated proctor list
+
+## @require_admin_session(['admin_access'])    
+@app.route("/accept-proctor/<int:id>")
+def accept_proctor(id):
+    try:
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM proctor_registration WHERE id = %s", (id,))
+        proctor_account_reg=cursor.fetchone() #     
+        act_date = datetime.now().date()
+        cursor.execute("INSERT INTO proctor_account (name,afpsn,password,rank,afp_mos,date_added) VALUES (%s, %s,%s, %s,%s,%s)", (proctor_account_reg[1],proctor_account_reg[2],proctor_account_reg[3],proctor_account_reg[4],proctor_account_reg[5],act_date))
+        cursor.execute("DELETE FROM proctor_registration WHERE id = %s", (id,))
+        db.commit()
+        cursor.close()
+        return redirect("/proctor_approval")  # Redirect to the appropriate route
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+#end of code for proctor list
+
 # Routes for Admin-specific pages
 @app.route('/admin_approval')
 # @require_admin_session(['admin_access'])
@@ -496,20 +539,7 @@ def reject_proctor(id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-## @require_admin_session(['admin_access'])    
-@app.route("/accept-proctor/<int:id>")
-def accept_proctor(id):
-    try:
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM proctor_registration WHERE id = %s", (id,))
-        proctor_account_reg=cursor.fetchone() #        
-        cursor.execute("INSERT INTO proctor_account (name,afpsn,password,rank,afp_mos) VALUES (%s, %s,%s, %s,%s)", (proctor_account_reg[1],proctor_account_reg[2],proctor_account_reg[3],proctor_account_reg[4],proctor_account_reg[5]))
-        cursor.execute("DELETE FROM proctor_registration WHERE id = %s", (id,))
-        db.commit()
-        cursor.close()
-        return redirect("/proctor_approval")  # Redirect to the appropriate route
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+
 
 
 ## @require_admin_session(['admin_access'])
@@ -694,6 +724,7 @@ def update_summary(afpsn_value, act_date_value):
         pushup = request.form['pushup']
         raw_situp = request.form['raw_situp']
         situp = request.form['situp']
+        raw_kmrun = request.form['raw_kmrun']
 
         kmrun = request.form['kmrun']
         total = request.form['total']
@@ -702,8 +733,8 @@ def update_summary(afpsn_value, act_date_value):
         unit = request.form['unit']
 
         cursor = db.cursor()
-        query = "UPDATE pft_summary SET rank=%s, first_name=%s, middle_name=%s, last_name=%s, afpsn=%s, afp_mos=%s, gender=%s, age=%s, raw_pushup=%s, pushup=%s, raw_situp=%s, situp=%s, kmrun=%s, total=%s, average=%s, remarks=%s, unit=%s WHERE afpsn=%s AND act_date=%s"
-        cursor.execute(query, (rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, age, raw_pushup, pushup, raw_situp, situp, kmrun, total, average, remarks, unit, afpsn_value, act_date_value))
+        query = "UPDATE pft_summary SET rank=%s, first_name=%s, middle_name=%s, last_name=%s, afpsn=%s, afp_mos=%s, gender=%s, age=%s, raw_pushup=%s, pushup=%s, raw_situp=%s, situp=%s, raw_kmrun=%s, kmrun=%s, total=%s, average=%s, remarks=%s, unit=%s WHERE afpsn=%s AND act_date=%s"
+        cursor.execute(query, (rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, age, raw_pushup, pushup, raw_situp, situp, raw_kmrun, kmrun, total, average, remarks, unit, afpsn_value, act_date_value))
         db.commit()
         cursor.close()
         return redirect("/pft_results")  # Redirect to the appropriate route
@@ -727,35 +758,78 @@ def add_kmrun(afpsn, act_date):
 @app.route('/update-kmrun/<string:afpsn_value>/<string:act_date_value>', methods=['POST'])
 def update_kmrun(afpsn_value, act_date_value):
     if request.method == 'POST':
-        kmrun = float(request.form['kmrun'])  # Convert kmrun to float
-        cursor = db.cursor(dictionary=True)
+        try:
+            km_minutes = request.form['km_minutes']
+            km_seconds = request.form['km_seconds']
+            raw_kmrun = f"{km_minutes}:{km_seconds}"  # Combine minutes and seconds with a colon
 
-        # Update kmrun in pft_summary table
-        query_update_kmrun = "UPDATE pft_summary SET kmrun = %s WHERE afpsn = %s AND act_date = %s"
-        cursor.execute(query_update_kmrun, (kmrun, afpsn_value, act_date_value))
-        db.commit()
+            cursor = db.cursor(dictionary=True)
+
+            # Update kmrun in pft_summary table
+            query_update_kmrun = "UPDATE pft_summary SET raw_kmrun = %s WHERE afpsn = %s AND act_date = %s"
+            cursor.execute(query_update_kmrun, (raw_kmrun, afpsn_value, act_date_value))
+            db.commit()
+            cursor.close()
+            return redirect("/pft_results")
+
+        except Exception as e:
+            # Handle exceptions, log errors, and provide appropriate response
+            print(f"An error occurred: {str(e)}")
+            return "An error occurred while processing the request."
 
         # Fetch pushup, situp, and kmrun grades from pft_summary table
-        query_fetch_grades = "SELECT pushup, situp, kmrun FROM pft_summary WHERE afpsn = %s AND act_date = %s"
-        cursor.execute(query_fetch_grades, (afpsn_value, act_date_value))
-        grades_data = cursor.fetchone()
+        #query_fetch_grades = "SELECT pushup, situp, kmrun FROM pft_summary WHERE afpsn = %s AND act_date = %s"
+        #cursor.execute(query_fetch_grades, (afpsn_value, act_date_value))
+        #grades_data = cursor.fetchone()
 
         # Calculate the average of pushup, situp, and kmrun grades
-        pushup_grade = grades_data['pushup']
-        situp_grade = grades_data['situp']
-        total_grade = pushup_grade + situp_grade + kmrun
-        average_grade = total_grade / 3
+        #pushup_grade = grades_data['pushup']
+        #situp_grade = grades_data['situp']
+        #total_grade = pushup_grade + situp_grade + kmrun
+        #average_grade = total_grade / 3
 
         # Determine pass or fail remark
-        remark = "Passed" if pushup_grade >= 75 and situp_grade >= 75 and kmrun >= 75 else "Failed"
+        #remark = "Passed" if pushup_grade >= 75 and situp_grade >= 75 and kmrun >= 75 else "Failed"
 
         # Update total and average grades, and remark in pft_summary table
-        query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"
-        cursor.execute(query_update_summary, (total_grade, average_grade, remark, afpsn_value, act_date_value))
-        db.commit()
+        #query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"
+        #cursor.execute(query_update_summary, (total_grade, average_grade, remark, afpsn_value, act_date_value))
+        #db.commit()
+    
 
-        cursor.close()
-        return redirect("/pft_results")        
+# Route to update summary account information
+@app.route('/compute-results/<string:afpsn_value>/<string:act_date_value>', methods=['POST'])
+def compute_results(afpsn_value, act_date_value):
+    if request.method == 'POST':
+        try:
+            cursor = db.cursor(dictionary=True)
+
+        #Fetch pushup, situp, and kmrun grades from pft_summary table
+            query_fetch_grades = "SELECT pushup, situp, kmrun FROM pft_summary WHERE afpsn = %s AND act_date = %s"
+            cursor.execute(query_fetch_grades, (afpsn_value, act_date_value))
+            grades_data = cursor.fetchone()
+
+        # Calculate the average of pushup, situp, and kmrun grades
+            kmrun = grades_data['kmrun']
+            pushup_grade = grades_data['pushup']
+            situp_grade = grades_data['situp']
+            total_grade = pushup_grade + situp_grade + kmrun
+            average_grade = total_grade / 3
+
+        # Determine pass or fail remark
+            remark = "Passed" if pushup_grade >= 70 and situp_grade >= 70 and kmrun >= 70 else "Failed"
+
+        # Update total and average grades, and remark in pft_summary table
+            query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"
+            cursor.execute(query_update_summary, (total_grade, average_grade, remark, afpsn_value, act_date_value))
+            db.commit()
+            cursor.close()
+            return redirect("/pft_results")
+
+        except Exception as e:
+            # Handle exceptions, log errors, and provide appropriate response
+            print(f"An error occurred: {str(e)}")
+            return "An error occurred while processing the request."
 
 ## @require_admin_session(['admin_access'])    
 #@app.route("/accept-participant/<int:id>")
@@ -952,10 +1026,18 @@ def check_existing_situp_data():
     cursor.execute("SELECT * FROM pft_situp WHERE afpsn = %s AND act_date = %s", (afpsn, today_date))
     existing_data = cursor.fetchone()
 
+    cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s AND act_date = %s", (afpsn, today_date))
+    did_pushup = cursor.fetchone()
+
+
     if existing_data:
         return jsonify(True)  # Data exists
     else:
-        return jsonify(False)  # No data found
+        if did_pushup:
+            return jsonify(False)  # Data exists
+
+        else:
+            return jsonify(True)  # No data found
 
 ######
 
