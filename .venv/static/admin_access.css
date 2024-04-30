@@ -518,18 +518,25 @@ select {
 }
 
 .admin_cardBox .card-link[href="/pft_results"] .card,
-.admin_cardBox .card-link[href="/registration"] .card {
+.admin_cardBox .card-link[href="/registration"] .card,
+.admin_cardBox .card-link[href="/participant_approval"] .card {
     margin-left: 20px;
 }
 
 .admin_cardBox .card-link[href="/proctor_approval"] .card,
-.admin_cardBox .card-link[href="/participant_approval"] .card {
+.admin_cardBox .card-link[href="/passed_proctors_list"], 
+.admin_cardBox .card-link[href="passed_account_list"] {
     margin-right: 20px;
 }
 
 .admin_cardBox .card-link[href="/pft_results"] .card,
 .admin_cardBox .card-link[href="/proctor_approval"] .card {
-    margin-top: 475px;
+    margin-top: 725px;
+}
+
+.admin_cardBox .card-link[href="/participant_approval"] .card,
+.admin_cardBox .card-link[href="passed_account_list"] {
+    margin-bottom: 50px;
 }
 
 /* ================== Exercise Results ============== */
@@ -662,6 +669,10 @@ select {
   }*/
   .cardHeader h2 {
     font-size: 20px;
+  }
+
+  .cardHeader h3 {
+    font-size: 18px;
   }
  
   .admin_navigation {

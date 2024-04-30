@@ -57,6 +57,7 @@ body {
     min-height: 100vh;
 }
 
+
 .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -89,7 +90,7 @@ button {
 }
 
 button:hover {
-    background-color: #000000;
+    background-color: #32620E;
 }
 
 /* Form styles */
