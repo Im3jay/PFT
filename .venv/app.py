@@ -492,6 +492,12 @@ def accept_proctor(id):
 def admin_approval():
     return render_template('admin_approval.html')
 
+from datetime import datetime
+
+from datetime import datetime
+
+from datetime import datetime
+
 @app.route('/pft_results', methods=['GET', 'POST'])
 def pft_results():
     if request.method == 'POST':
@@ -501,15 +507,54 @@ def pft_results():
         cursor.execute(query, ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%'))
         pft_data = cursor.fetchall()
         cursor.close()
-        return render_template("pft_results.html", pft_data=pft_data, search_query=search_query)
+        # Add age to pft_data
+        pft_data_with_age = []
+        for row in pft_data:
+            afpsn = row[5]  # Assuming afpsn is the 6th column in the PFT_summary table
+            cursor = db.cursor()
+            try:
+                cursor.execute("SELECT CASE WHEN birth_date IS NULL THEN NULL ELSE DATEDIFF(CURDATE(), birth_date) DIV 365 END FROM users_account WHERE afpsn = %s", (afpsn,))
+                age_result = cursor.fetchone()
+                if age_result:
+                    age = age_result[0]
+                else:
+                    age = None
+                # Insert age at 9th index in the tuple
+                row_with_age = row[:8] + (age,) + row[8:]
+                pft_data_with_age.append(row_with_age)
+            except Exception as e:
+                print("Error fetching age for afpsn:", afpsn)
+                print(e)
+            finally:
+                cursor.close()
+        return render_template("pft_results.html", pft_data=pft_data_with_age, search_query=search_query)
     else:
         cursor = db.cursor()
         cursor.execute("SELECT * FROM PFT_summary")
         pft_data = cursor.fetchall()
         cursor.close()
-        return render_template("pft_results.html", pft_data=pft_data)
+        # Add age to pft_data
+        pft_data_with_age = []
+        for row in pft_data:
+            afpsn = row[5]  # Assuming afpsn is the 6th column in the PFT_summary table
+            cursor = db.cursor()
+            try:
+                cursor.execute("SELECT CASE WHEN birth_date IS NULL THEN NULL ELSE DATEDIFF(CURDATE(), birth_date) DIV 365 END FROM users_account WHERE afpsn = %s", (afpsn,))
+                age_result = cursor.fetchone()
+                if age_result:
+                    age = age_result[0]
+                else:
+                    age = None
+                # Insert age at 9th index in the tuple
+                row_with_age = row[:8] + (age,) + row[8:]
+                pft_data_with_age.append(row_with_age)
+            except Exception as e:
+                print("Error fetching age for afpsn:", afpsn)
+                print(e)
+            finally:
+                cursor.close()
+        return render_template("pft_results.html", pft_data=pft_data_with_age)
 
-    
 ## @require_admin_session(['admin_access'])
 @app.route('/proctor_approval', methods=['GET', 'POST'])
 def proctor_approval():
@@ -538,9 +583,6 @@ def reject_proctor(id):
         return redirect("/proctor_approval")  # Redirect to the appropriate route
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-
-
 
 ## @require_admin_session(['admin_access'])
 @app.route('/participant_approval', methods=['GET', 'POST'])
@@ -719,7 +761,7 @@ def update_summary(afpsn_value, act_date_value):
         afpsn = request.form['afpsn']
         afp_mos = request.form['afp_mos']
         gender = request.form['gender']
-        age = request.form['age']
+        # age = request.form['age']
         raw_pushup = request.form['raw_pushup']
         pushup = request.form['pushup']
         raw_situp = request.form['raw_situp']
@@ -733,8 +775,8 @@ def update_summary(afpsn_value, act_date_value):
         unit = request.form['unit']
 
         cursor = db.cursor()
-        query = "UPDATE pft_summary SET rank=%s, first_name=%s, middle_name=%s, last_name=%s, afpsn=%s, afp_mos=%s, gender=%s, age=%s, raw_pushup=%s, pushup=%s, raw_situp=%s, situp=%s, raw_kmrun=%s, kmrun=%s, total=%s, average=%s, remarks=%s, unit=%s WHERE afpsn=%s AND act_date=%s"
-        cursor.execute(query, (rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, age, raw_pushup, pushup, raw_situp, situp, raw_kmrun, kmrun, total, average, remarks, unit, afpsn_value, act_date_value))
+        query = "UPDATE pft_summary SET rank=%s, first_name=%s, middle_name=%s, last_name=%s, afpsn=%s, afp_mos=%s, gender=%s, raw_pushup=%s, pushup=%s, raw_situp=%s, situp=%s, raw_kmrun=%s, kmrun=%s, total=%s, average=%s, remarks=%s, unit=%s WHERE afpsn=%s AND act_date=%s"
+        cursor.execute(query, (rank, first_name, middle_name, last_name, afpsn, afp_mos, gender, raw_pushup, pushup, raw_situp, situp, raw_kmrun, kmrun, total, average, remarks, unit, afpsn_value, act_date_value))
         db.commit()
         cursor.close()
         return redirect("/pft_results")  # Redirect to the appropriate route
@@ -761,15 +803,139 @@ def update_kmrun(afpsn_value, act_date_value):
         try:
             km_minutes = request.form['km_minutes']
             km_seconds = request.form['km_seconds']
-            raw_kmrun = f"{km_minutes}:{km_seconds}"  # Combine minutes and seconds with a colon
+            raw_kmrun_text = f"{km_minutes}:{km_seconds}"  # Combine minutes and seconds with a colon
+            raw_kmrun = int(km_minutes + km_seconds)
 
             cursor = db.cursor(dictionary=True)
 
-            # Update kmrun in pft_summary table
-            query_update_kmrun = "UPDATE pft_summary SET raw_kmrun = %s WHERE afpsn = %s AND act_date = %s"
-            cursor.execute(query_update_kmrun, (raw_kmrun, afpsn_value, act_date_value))
-            db.commit()
-            cursor.close()
+            switch_male = {
+                (21, 25): "age21-25_male",
+                (26, 30): "age26-30_male",
+                (31, 35): "age31-35_male",
+                (36, 40): "age36-40_male",
+                (41, 45): "age41-45_male",
+                (46, 50): "age46-50_male",
+                (51, 55): "age51-55_male",
+                (56, float('inf')): "age56-60_male",
+            }
+
+            switch_female = {
+                (21, 25): "age21-25_female",
+                (26, 30): "age26-30_female",
+                (31, 35): "age31-35_female",
+                (36, 40): "age36-40_female",
+                (41, 45): "age41-45_female",
+                (46, 50): "age46-50_female",
+                (51, 55): "age51-55_female",
+                (56, float('inf')): "age56-60_female",
+            }
+
+            switch_kmrun = {
+                (1108, 1123): "11:08 - 11:23",
+                (1124, 1140): "11:24 - 11:40",
+                (1141, 1157): "11:41 - 11:56",
+                (1158, 1214): "11:58 - 12:14",
+                (1215, 1231): "12:15 - 12:31",
+                (1232, 1248): "12:32 - 12:48",
+                (1249, 1305): "12:49 - 13:05",
+                (1306, 1322): "13:06 - 13:22",
+                (1323, 1339): "13:23 - 13:39",
+                (1340, 1356): "13:40 - 13:56",
+                (1357, 1413): "13:57 - 14:13",
+                (1414, 1430): "14:14 - 14:30",
+                (1431, 1447): "14:31 - 14:47",
+                (1448, 1504): "14:48 - 15:04",
+                (1505, 1521): "15:05 - 15:21",
+                (1522, 1538): "15:22 - 15:38",
+                (1539, 1555): "15:39 - 15:55",
+                (1556, 1612): "15:56 - 16:12",
+                (1613, 1629): "16:13 - 16:29",
+                (1630, 1646): "16:30 - 16:46",
+                (1647, 1703): "16:47 - 17:03",
+                (1704, 1720): "17:04 - 17:20",
+                (1721, 1737): "17:21 - 17:37",
+                (1738, 1754): "17:38 - 17:54",
+                (1755, 1811): "17:55 - 18:11",
+                (1812, 1828): "18:12 - 18:28",
+                (1829, 1845): "18:29 - 18:45",
+                (1846, 1902): "18:46 - 19:02",
+                (1903, 1919): "19:03 - 19:19",
+                (1920, 1936): "19:20 - 19:36",
+                (1937, 1953): "19:37 - 19:53",
+                (1954, 2010): "19:54 - 20:10",
+                (2011, 2027): "20:11 - 20:27",
+                (2028, 2044): "20:28 - 20:44",
+                (2045, 2101): "20:45 - 21:01",
+                (2102, 2118): "21:02 - 21:18",
+                (2119, 2135): "21:19 - 21:35",
+                (2136, 2152): "21:36 - 21:52",
+                (2153, 2209): "21:53 - 22:09",
+                (2210, 2226): "22:10 - 22:26",
+                (2227, 2243): "22:27 - 22:43",
+                (2244, 2300): "22:44 - 23:00",
+                (2301, 2317): "23:01 - 23:17",
+                (2318, 2334): "23:18 - 23:34",
+                (2335, 2351): "23:35 - 23:51",
+                (2351, 2352): "23:52"
+            }
+
+            # Adjust raw_kmrun if it's below the lowest or above the highest possible score
+            if raw_kmrun < 1108: # Highest
+                raw_kmrun = 1108
+            elif raw_kmrun > 2352: # Lowest
+                raw_kmrun = 2352
+
+            # Execute the queries to get gender and age
+            cursor.execute("SELECT gender FROM `users_account` WHERE afpsn = %s;", (afpsn_value,))
+            gender_result = cursor.fetchone()
+
+            cursor.execute("SELECT DATEDIFF(CURDATE(), birth_date) DIV 365 AS age FROM users_account WHERE afpsn = %s", (afpsn_value,))
+            age_result = cursor.fetchone()
+
+            # Check if gender and age results are fetched successfully
+            if gender_result and 'age' in age_result:
+                gender = gender_result['gender']
+                age = age_result['age']  # accessing age by key
+
+                # Determine which switch dictionary to use based on gender
+                switch_dict = switch_male if gender == 'M' else switch_female
+
+                # Determine the appropriate column in kmrun_reference based on age group
+                selected_column = None
+                for age_range, column in switch_dict.items():
+                    if age_range[0] <= age <= age_range[1]:
+                        selected_column = column
+                        break
+
+                # Convert raw_kmrun to time range
+                selected_time_range = None
+                for time_range, value in switch_kmrun.items():
+                    if time_range[0] <= raw_kmrun <= time_range[1]:
+                        selected_time_range = value
+                        break
+
+                if selected_column and selected_time_range:
+                    # Query kmrun_reference table to get kmrun value
+                    query_select_kmrun = f"SELECT `{selected_column}` FROM kmrun_reference WHERE `time` = %s;"
+                    cursor.execute(query_select_kmrun, (selected_time_range,))
+                    kmrun_result = cursor.fetchone()
+
+                    if kmrun_result and selected_column in kmrun_result:
+                        kmrun_value = kmrun_result[selected_column]
+                        # Update pft_summary table
+                        query_update_kmrun = "UPDATE pft_summary SET raw_kmrun = %s, kmrun = %s WHERE afpsn = %s AND act_date = %s"
+                        cursor.execute(query_update_kmrun, (raw_kmrun_text, kmrun_value, afpsn_value, act_date_value))
+                        db.commit()
+
+                    else:
+                        # Handle case when kmrun is not found or column is not in result
+                        pass
+                else:
+                    # Handle case when selected column or time range is not found
+                    pass
+            else:
+                # Handle case when gender or age is not found
+                pass
             return redirect("/pft_results")
 
         except Exception as e:
