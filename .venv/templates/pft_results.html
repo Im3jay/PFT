@@ -88,6 +88,7 @@
                                         <th>Unit</th>
                                         <th>Activity Date</th>
                                         <th>Actions</th>
+                                      
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -129,10 +130,10 @@
                                                 <button type="submit" class="btn btn-accept btn-sm">Compute for results</button>
                                             </form>    
                                             
-                                            {% if row[13] %}
-                                            <!-- If row[13] has a value, the button will not be rendered -->
+                                            {% if row[13] or (row[12] is not none and row[12] <= 69) %}
+                                            <!-- If row[13] has a value or row[12] is not empty and greater than 69, the button will not be rendered -->
                                             {% else %}
-                                            <!-- If row[13] is empty or null, the button will be displayed -->
+                                            <!-- If row[13] is empty or null and row[12] is either empty or less than or equal to 69, the button will be displayed -->
                                             <form action="/add-kmrun/{{ row[5] }}/{{ row[19] }}" method="get">
                                                 <button type="submit" class="btn btn-accept btn-sm">Add KM run</button>
                                             </form>

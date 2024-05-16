@@ -488,7 +488,31 @@ def delete_passed_account_list(afpsn):
     query = "DELETE FROM users_pft WHERE afpsn = %s"
     cursor.execute(query, (afpsn,))
     db.commit()
-    
+
+    cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s", (afpsn,))
+    inPftPushup=cursor.fetchone() #  
+
+    if(inPftPushup):
+         # Delete the proctor with the given ID
+        query = "DELETE FROM pft_pushup WHERE afpsn = %s"
+        cursor.execute(query, (afpsn,))
+        db.commit()
+    else:
+        print("Doesnt exist")
+        # Delete the proctor with the given ID
+
+    cursor.execute("SELECT * FROM pft_situp WHERE afpsn = %s", (afpsn,))
+    inPftSitup=cursor.fetchone() #  
+
+    if(inPftSitup):
+        query = "DELETE FROM pft_situp WHERE afpsn = %s"
+        cursor.execute(query, (afpsn,))
+        db.commit()
+    else:
+        print("Doesnt exist")
+        # Delete the proctor with the given ID
+
+    cursor.close()
     return redirect('/passed_account_list')  # Redirect to the page with the updated proctor list
 
 ## @require_admin_session(['admin_access'])    
@@ -966,74 +990,45 @@ def update_kmrun(afpsn_value, act_date_value):
             print(f"An error occurred: {str(e)}")
             return "An error occurred while processing the request."
 
-        # Fetch pushup, situp, and kmrun grades from pft_summary table
-        #query_fetch_grades = "SELECT pushup, situp, kmrun FROM pft_summary WHERE afpsn = %s AND act_date = %s"
-        #cursor.execute(query_fetch_grades, (afpsn_value, act_date_value))
-        #grades_data = cursor.fetchone()
-
-        # Calculate the average of pushup, situp, and kmrun grades
-        #pushup_grade = grades_data['pushup']
-        #situp_grade = grades_data['situp']
-        #total_grade = pushup_grade + situp_grade + kmrun
-        #average_grade = total_grade / 3
-
-        # Determine pass or fail remark
-        #remark = "Passed" if pushup_grade >= 75 and situp_grade >= 75 and kmrun >= 75 else "Failed"
-
-        # Update total and average grades, and remark in pft_summary table
-        #query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"
-        #cursor.execute(query_update_summary, (total_grade, average_grade, remark, afpsn_value, act_date_value))
-        #db.commit()
     
 
-# Route to update summary account information
 @app.route('/compute-results/<string:afpsn_value>/<string:act_date_value>', methods=['POST'])
 def compute_results(afpsn_value, act_date_value):
     if request.method == 'POST':
         try:
             cursor = db.cursor(dictionary=True)
 
-        #Fetch pushup, situp, and kmrun grades from pft_summary table
             query_fetch_grades = "SELECT pushup, situp, kmrun FROM pft_summary WHERE afpsn = %s AND act_date = %s"
             cursor.execute(query_fetch_grades, (afpsn_value, act_date_value))
             grades_data = cursor.fetchone()
 
-        # Calculate the average of pushup, situp, and kmrun grades
-            kmrun = grades_data['kmrun']
-            pushup_grade = grades_data['pushup']
-            situp_grade = grades_data['situp']
-            total_grade = pushup_grade + situp_grade + kmrun
-            average_grade = total_grade / 3
+            if grades_data:
+                pushup_grade = grades_data['pushup']
+                situp_grade = grades_data['situp']
+                kmrun_grade = grades_data['kmrun']
 
-        # Determine pass or fail remark
-            remark = "Passed" if pushup_grade >= 70 and situp_grade >= 70 and kmrun >= 70 else "Failed"
+                # Calculate the total and average grades
+                total_grade = pushup_grade + situp_grade + kmrun_grade
+                average_grade = total_grade / 3
 
-        # Update total and average grades, and remark in pft_summary table
-            query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"
-            cursor.execute(query_update_summary, (total_grade, average_grade, remark, afpsn_value, act_date_value))
-            db.commit()
+                # Determine pass or fail remark
+                remark = "Passed" if pushup_grade >= 70 and situp_grade >= 70 and kmrun_grade >= 70 else "Failed"
+
+                query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"
+                cursor.execute(query_update_summary, (total_grade, average_grade, remark, afpsn_value, act_date_value))
+                db.commit()
+            else:
+                remark = "Failed"
+                query_update_summary = "UPDATE pft_summary SET total = %s, average = %s, remarks = %s WHERE afpsn = %s AND act_date = %s"
+                cursor.execute(query_update_summary, (0, 0, remark, afpsn_value, act_date_value))
+                db.commit()
+
             cursor.close()
             return redirect("/pft_results")
 
         except Exception as e:
-            # Handle exceptions, log errors, and provide appropriate response
             print(f"An error occurred: {str(e)}")
             return "An error occurred while processing the request."
-
-## @require_admin_session(['admin_access'])    
-#@app.route("/accept-participant/<int:id>")
-#def accept_proctor(id):
-#    try:
-#        cursor = db.cursor()
-#        cursor.execute("SELECT * FROM users_account WHERE id = %s", (id,))
-#        proctor_account_reg=cursor.fetchone() #        
-#        cursor.execute("INSERT INTO proctor_account (name,afpsn,password,rank,afp_mos) VALUES (%s, %s,%s, %s,%s)", (proctor_account_reg[1],proctor_account_reg[2],proctor_account_reg[3],proctor_account_reg[4],proctor_account_reg[5]))
-#        cursor.execute("DELETE FROM proctor_registration WHERE id = %s", (id,))
-#        db.commit()
-#        cursor.close()
-#        return redirect("/proctor_approval")  # Redirect to the appropriate route
-#    except Exception as e:
-#        return jsonify({"error": str(e)}), 500
 
 
 @app.route('/admin_participants')
@@ -1218,12 +1213,20 @@ def check_existing_situp_data():
     cursor.execute("SELECT * FROM pft_pushup WHERE afpsn = %s AND act_date = %s", (afpsn, today_date))
     did_pushup = cursor.fetchone()
 
+    cursor.execute("SELECT * FROM pft_summary WHERE afpsn = %s AND act_date = %s", (afpsn, today_date))
+    summary_data = cursor.fetchone()
 
+    print("The 12th summary data "+summary_data[12])
+
+    print(did_pushup[2])
     if existing_data:
         return jsonify(True)  # Data exists
     else:
         if did_pushup:
-            return jsonify(False)  # Data exists
+           if  did_pushup[2]>69:
+             return jsonify(False)  # Data exists
+           else:
+               return jsonify(True)  # No data found
 
         else:
             return jsonify(True)  # No data found
@@ -1423,5 +1426,43 @@ def check_existing_kmrun_data():
         return jsonify(False)  # No data found
 ######
 
+@app.route('/delete_all_accounts_user', methods=['POST'])
+def delete_all_accounts_user():
+
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM users_pft") 
+    db.commit()
+    cursor.execute("SELECT * FROM pft_situp ")
+    inPftPushup=cursor.fetchone() #  
+    if(inPftPushup):
+         # Delete the proctor with the given ID
+        query = "DELETE FROM pft_pushup"
+        cursor.execute(query)
+        db.commit()
+    else:
+        print("Doesnt exist")
+        # Delete the proctor with the given ID
+
+    cursor.execute("SELECT * FROM pft_situp")
+    inPftSitup=cursor.fetchone() #  
+
+    if(inPftSitup):
+        query = "DELETE FROM pft_situp"
+        cursor.execute(query)
+        db.commit()
+    else:
+        print("Doesnt exist")
+        # Delete the proctor with the given ID
+
+
+@app.route('/delete_all_accounts_proctor', methods=['POST'])
+def delete_all_accounts_proctor():
+
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM proctor_account") 
+    db.commit()
+
+    cursor.close()
+    return redirect(url_for('passed_proctors_list'))
 if __name__ == '__main__':
     app.run(debug=True)
